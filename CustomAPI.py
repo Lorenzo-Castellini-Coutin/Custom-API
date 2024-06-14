@@ -8,20 +8,25 @@ class UserDAO:
 
   def addNewUser():
     pass
-  def getUserByEmail():
-    pass
-  def getUserById():
-    pass
+  def getUserByEmail(self, email):
+    self.cursor.execute("SELECT * FROM users WHERE email_address=?", (email,))
+    return self.cursor.fetchall()
+  
+  def getUserById(self, id):
+    self.cursor.execute("SELECT * FROM users WHERE user_id=?", (id,))
+    return self.cursor.fetchall()
 
 class MessageDAO:
   def __init__(self):
-    pass
+    self.conn = sqlite3.connect('usersdatabase.db')
+    self.cursor = self.conn.cursor()
+
   def sendNewMessage():
     pass
   def deleteMessage():
     pass
-  def getMessageById():
-    pass
+  def getMessageById(self, messid):
+    self.cursor.execute("SELECT * FROM users WHERE")
   
 class Users:
   
