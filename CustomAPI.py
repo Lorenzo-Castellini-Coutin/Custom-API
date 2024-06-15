@@ -27,11 +27,35 @@ class MessageDAO:
   def sendNewMessage(self, subject, body, date):
     self.cursor.execute("INSERT INTO messages (subject, body, date) VALUES (?,?,?)", (subject, body, date,))
     
-  def deleteMessage():
+  def deleteMessage():  #Ask how will the message be found?
     pass
   
   def getMessageById(self, messid):
     self.cursor.execute("SELECT * FROM users WHERE m_id=?", (messid,))
   
 class Users:
-  pass
+  def __init__(self):
+    self.users = UserDAO()  #Creates a 'connection' with the UserDAO class
+  
+  def addNewUser():
+    pass
+
+  def getUserByEmail():
+    pass
+
+  def getUsersById():
+    pass
+
+class Messages:
+  def __init__(self):
+    self.messages = MessageDAO() 
+  
+  def sendNewMessage():
+    pass
+
+  def deleteMessage():
+    pass
+
+  def getMessageById():
+    pass
+
