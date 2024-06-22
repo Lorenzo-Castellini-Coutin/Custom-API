@@ -1,11 +1,8 @@
-
+from Models.MessageDAO import MessageDAO
 
 class Messages:
-  def __init__(self):
-    self.messages = MessageDAO() 
-  
-  def sendNewMessage():
-    pass
+  def sendNewMessage(self, new_message):
+    MessageDAO().sendNewMessage(new_message)
 
   def deleteMessage():
     pass

@@ -1,12 +1,13 @@
-from Models import UserDAO
+from Models.UserDAO import UserDAO
 from flask import Flask, jsonify, request
 
 class Users:
-  def addNewUser(new_user_data):
-    UserDAO.addNewUser(new_user_data)
+   def addNewUser1(self, user_data):
+      UserDAO().addNewUser2(user_data)
+      
+   def getUserByEmail1(self, user_email):
+      user_email1 = UserDAO.getUserByEmail2(user_email)
+      return user_email1
 
-  def getUserByEmail(self):
-    pass
-
-  def getUsersById(self):
-    pass
+   def getUsersById(self):
+      pass
