@@ -13,13 +13,20 @@ class UserDAO:
 
   def getUserByEmail2(self, user_email):
     conn, cursor = db_connect()
-    query = '''SELECT * FROM users WHERE email_address=? and is_deleted=0''', (user_email)
-    user_email2 = cursor.fetchall(query, user_email)
+    query = 'SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address FROM users WHERE is_deleted=0 and email_address=?'
+    cursor.execute(query, (user_email,))
+    user_email2 = cursor.fetchone()
     conn.commit()
     conn.close()
     return user_email2
   
-  def getUserById(cursor, self):
-    cursor.execute("SELECT * FROM users WHERE user_id=?", (self.id,))
-    return cursor.fetchall()
+  def getUserById2(self, user_id):
+    conn, cursor = db_connect()
+    query = 'SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address FROM users WHERE is_deleted=0 and user_id=?'
+    cursor.execute(query, ((user_id,)))
+    user_id2 = cursor.fetchone()
+    conn.commit()
+    conn.close()
+    return user_id2
+   
 
