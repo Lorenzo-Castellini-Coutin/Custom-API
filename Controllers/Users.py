@@ -6,8 +6,9 @@ class Users:
       UserDAO().addNewUser2(user_data)
       
    def getUserByEmail1(self, user_email):
-      user_email1 = UserDAO.getUserByEmail2(user_email)
+      user_email1 = UserDAO().getUserByEmail2(user_email)
       return user_email1
 
-   def getUsersById(self):
-      pass
+   def getUsersById1(self, user_id):
+      user_id1 = UserDAO().getUserById2(user_id)
+      return user_id1
