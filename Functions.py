@@ -4,7 +4,7 @@ import os
 
 load_dotenv()
 
-conn = mysql.connector.connect (
+db_connect = mysql.connector.connect (
     host = os.getenv('SERVER_HOST'),
     port = os.getenv('SERVER_PORT'),
     user = os.getenv('DB_user'),
