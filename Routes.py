@@ -44,3 +44,6 @@ def existing_messages(message_id):
         return Messages().updateMessage1(new_message)
     else:
         return jsonify('Method is not allowed.'), 405
+
+if __name__ == "__main__":
+    app.run(debug = True)
