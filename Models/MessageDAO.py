@@ -3,7 +3,9 @@ from Functions import db_connect
 class MessageDAO:
   def sendNewMessage2(self, message):
     conn, cursor = db_connect()
-    query1 = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body, date) VALUES(?,?,?,?,?,?)'''
+    query1 = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body, date) 
+                VALUES(?,?,?,?,?,?)'''
+    
     cursor.execute(query1, (message['sender_user_id'], message['recipient_user_id'], message['reply_id'], message['subject'], message['body'], message['date']))
 
     query2 = '''INSERT INTO recipient (sender_user_id, recipient_user_id) VALUES(?,?)'''
