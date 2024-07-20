@@ -12,6 +12,6 @@ conn = mysql.connector.connect (
     database = os.getenv('DB_name')
 )
 
-print(conn)
+
 
 
