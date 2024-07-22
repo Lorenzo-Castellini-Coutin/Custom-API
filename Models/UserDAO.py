@@ -1,12 +1,16 @@
 from Functions import db_connect
+from Hashing import hashing
 
 class UserDAO:
   def addNewUser2(self, user_data):
     conn, cursor = db_connect() 
-    query = '''INSERT INTO users (first_name, last_name, date_of_birth, gender, phone_number, email_address, password, is_premium) 
-               VALUES(%s, %s, %s, %s, %s, %s, %s, %s)'''
     
-    cursor.execute(query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], user_data['password'], user_data['premium']))
+    pw, salt = hashing(user_data['password'])
+    
+    query = '''INSERT INTO users (first_name, last_name, date_of_birth, gender, phone_number, email_address, password, salt, is_premium) 
+               VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+    
+    cursor.execute(query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium']))
     conn.commit()
     changes = cursor.rowcount
     conn.close()
@@ -14,7 +18,6 @@ class UserDAO:
       return False
     else:
       return True
-    
     
   def updateUsers2(self, user_data):
     conn, cursor = db_connect()
