@@ -45,5 +45,3 @@ def existing_messages(message_id):
     else:
         return jsonify('Method is not allowed.'), 405
 
-if __name__ == "__main__":
-    app.run(debug = True)

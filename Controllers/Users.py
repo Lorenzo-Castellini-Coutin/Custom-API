@@ -1,6 +1,6 @@
 from Models.UserDAO import UserDAO
 from flask import Flask, jsonify, request
-import json
+
 
 class Users:
    def addNewUser1(self, user_data):
@@ -22,18 +22,7 @@ class Users:
       if user_info is None:
          return jsonify('User not found or was already deleted.'), 400
       else:
-         user_template = {
-            "User_ID" : user_info[0],
-            "First Name" : user_info[1],
-            "Last Name" : user_info[2],
-            "Birth Day" : user_info[3],
-            "Gender" : user_info[4],
-            "Phone Number" : user_info[5],
-            "Email Address" : user_info[6],
-            "Membership" : user_info[7]
-         }
-         full_user_info = json.dumps(user_template, separators=(',', ':'), indent = 4)
-         return full_user_info
+         return jsonify(user_info), 200
 
    def deleteUsers1(self, user_id):
          delete_user = UserDAO().deleteUsers2(user_id)
