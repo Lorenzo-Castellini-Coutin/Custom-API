@@ -13,6 +13,13 @@ def new_user():
         return Users().addNewUser1(user_data)
     else:
         return jsonify('Method not allowed.'), 405
+    
+@app.route('/app/login', methods = ['POST'])
+def log_in():
+    if request.method == 'POST':
+        user_credentials = request.get_json()
+    else:
+        return jsonify('Method not allowed.'), 405
 
 @app.route('/app/users/<int:user_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_users(user_id):

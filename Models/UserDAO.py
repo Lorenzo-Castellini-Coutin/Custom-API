@@ -12,12 +12,8 @@ class UserDAO:
     
     cursor.execute(query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium']))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else:
-      return True
+
     
   def updateUsers2(self, user_data):
     conn, cursor = db_connect()
@@ -29,12 +25,8 @@ class UserDAO:
     
     cursor.execute(query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium'], user_data['user_id']))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else:
-      return True
+
   
   def getUserById2(self, user_id):
     conn, cursor = db_connect()
@@ -52,12 +44,8 @@ class UserDAO:
 
     cursor.execute(query, (user_id,))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else:
-      return True
+
   
   
    

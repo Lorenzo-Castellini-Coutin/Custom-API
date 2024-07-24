@@ -13,12 +13,8 @@ class MessageDAO:
     
     cursor.execute(query2, (message['sender_user_id'], message['recipient_user_id']))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else: 
-      return True
+
     
   def updateMessage2(self, new_message):
     conn, cursor = db_connect()
@@ -32,12 +28,8 @@ class MessageDAO:
     
     cursor.execute(query2, (new_message['recipient_user_id'], new_message['message_id']))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else:
-      return True  
+
 
   def deleteMessage2(self, del_message):  
     conn, cursor = db_connect()
@@ -51,12 +43,8 @@ class MessageDAO:
     
     cursor.execute(query2, (del_message,))
     conn.commit()
-    changes = cursor.rowcount
     conn.close()
-    if changes <= 0:
-      return False
-    else:
-      return True
+
 
   def getMessageById2(self, message_id):
     conn, cursor = db_connect()
