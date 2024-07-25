@@ -21,7 +21,7 @@ class Users:
       else:
          return jsonify('One or more of the user data is not supported.'), 400
       
-   def checkUser1(self, user_data):
+   def AutheticateUser1(self, user_data):
       if check_data_auth(user_data):
          user_info = UserDAO().checkUser2(user_data)
          if user_info:
