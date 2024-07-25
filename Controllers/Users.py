@@ -1,11 +1,26 @@
 from Models.UserDAO import UserDAO
 from flask import Flask, jsonify, request
-from validate_email import validate_email
+from Authentication import *
 
 class Users:
    def addNewUser1(self, user_data):
-      pass
-   
+      if check_user_input_type(user_data):
+
+         if check_valid_data(user_data):
+
+            if check_input_len(user_data):
+               UserDAO().addNewUser2(user_data)
+               return jsonify('User added successfully.'), 200
+
+            else:
+               return jsonify('One or more of the user data is longer than expected.'), 400
+            
+         else:
+            return jsonify('Email, phone number, and/or names might not be correct.'), 400
+         
+      else:
+         return jsonify('One or more of the user data is not supported.'), 400
+      
    def AuthenticateUser1(self, user_data):
       pass
    
