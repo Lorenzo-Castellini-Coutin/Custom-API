@@ -16,7 +16,7 @@ class Users:
                return jsonify('One or more of the user data is longer than expected.'), 400
             
          else:
-            return jsonify('Email, phone number, and/or first and last names might not be correct.'), 400
+            return jsonify('Email, phone number, and/or first and last names might not be valid.'), 400
          
       else:
          return jsonify('One or more of the user data is not supported.'), 400
