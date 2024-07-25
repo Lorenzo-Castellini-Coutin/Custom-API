@@ -14,12 +14,15 @@ def new_user():
     else:
         return jsonify('Method not allowed.'), 405
     
+    
 @app.route('/app/login', methods = ['POST'])
-def log_in():
+def authenticate():
     if request.method == 'POST':
-        user_credentials = request.get_json()
+        user_data = request.get_json()
+        return Users().Authenticate1(user_data)
     else:
         return jsonify('Method not allowed.'), 405
+    
 
 @app.route('/app/users/<int:user_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_users(user_id):
@@ -31,6 +34,7 @@ def existing_users(user_id):
         return Users().updateUsers1(request.get_json())
     else:
         return jsonify('Method not allowed'), 405
+    
 
 @app.route('/app/new_messages', methods = ['POST'])
 def new_message():
@@ -39,6 +43,7 @@ def new_message():
         return Messages().sendNewMessage1(new_message)
     else:
         return jsonify('Method not allowed.'), 405
+    
 
 @app.route('/app/messages/<int:message_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_messages(message_id):

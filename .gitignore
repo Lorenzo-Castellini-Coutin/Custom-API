@@ -1,3 +1,4 @@
 .env
 __pycache__
 Hashing.py
+Authentication.py

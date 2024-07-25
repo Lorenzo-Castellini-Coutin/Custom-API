@@ -14,8 +14,15 @@ class UserDAO:
     conn.commit()
     conn.close()
 
+
+  def AuthenticateUser2(self, user_data):
+    conn, cursor = db_connect()
     
-  def updateUsers2(self, user_data):
+    
+
+
+
+  def updateUser2(self, user_data):
     conn, cursor = db_connect()
     
     pw, salt = hashing(user_data['password'])
@@ -38,7 +45,7 @@ class UserDAO:
     conn.close()
     return user_info2
   
-  def deleteUsers2(self, user_id):
+  def deleteUser2(self, user_id):
     conn, cursor = db_connect()
     query = 'UPDATE users SET is_deleted=1 WHERE user_id=%s'
 

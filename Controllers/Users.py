@@ -12,7 +12,12 @@ class Users:
       else:
          return jsonify('Something went wrong with the info provided.'), 400
 
-   def updateUsers1(self, user_data):
+   
+   def AuthenticateUser1(self, user_data):
+      pass
+   
+   
+   def updateUser1(self, user_data):
       if len(user_data) == 9:
          update_user = UserDAO().updateUsers2(user_data)
          if update_user:
@@ -22,14 +27,16 @@ class Users:
       else:
          return jsonify('Something went wrong with the info provided.'), 400
       
-   def getUsersById1(self, user_id):
+      
+   def getUserById1(self, user_id):
       user_info = UserDAO().getUserById2(user_id)
       if user_info is None:
          return jsonify('User not found or was already deleted.'), 400
       else:
          return jsonify(user_info), 200
+      
 
-   def deleteUsers1(self, user_id):
+   def deleteUser1(self, user_id):
       delete_user = UserDAO().deleteUsers2(user_id)
       if delete_user:
          return jsonify('User deleted succesfully.'), 200
