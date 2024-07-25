@@ -1,5 +1,6 @@
 from Functions import db_connect
 from Hashing import hashing
+from Authentication import generate_token
 
 class UserDAO:
   def addNewUser2(self, user_data):
@@ -18,6 +19,8 @@ class UserDAO:
   def AuthenticateUser2(self, user_data):
     conn, cursor = db_connect()
     
+    auth_token = generate_token()
+
     
 
 

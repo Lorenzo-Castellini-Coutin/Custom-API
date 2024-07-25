@@ -1,17 +1,10 @@
 from Models.UserDAO import UserDAO
 from flask import Flask, jsonify, request
+from validate_email import validate_email
 
 class Users:
    def addNewUser1(self, user_data):
-      if len(user_data) == 9:
-         new_user = UserDAO().addNewUser2(user_data)
-         if new_user:
-            return jsonify('User added succesfully.'), 200
-         else:
-            return jsonify('Something went wrong in the database while performing your request.'), 500
-      else:
-         return jsonify('Something went wrong with the info provided.'), 400
-
+      pass
    
    def AuthenticateUser1(self, user_data):
       pass
