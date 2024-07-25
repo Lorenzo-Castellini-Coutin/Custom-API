@@ -27,11 +27,11 @@ def authenticate():
 @app.route('/app/users/<int:user_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_users(user_id):
     if request.method == 'GET':
-        return Users().getUsersById1(user_id)
+        return Users().getUserById1(user_id)
     elif request.method == 'DELETE':
-        return Users().deleteUsers1(user_id)
+        return Users().deleteUser1(user_id)
     elif request.method == 'PUT':
-        return Users().updateUsers1(request.get_json())
+        return Users().updateUser1(request.get_json())
     else:
         return jsonify('Method not allowed'), 405
     

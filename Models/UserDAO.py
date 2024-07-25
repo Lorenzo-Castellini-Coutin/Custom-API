@@ -1,12 +1,12 @@
 from Functions import db_connect
-from Hashing import hashing
-from Authentication import generate_token
+from Hashing import hashing_with_salt, normal_hashing
+from Authentication_Validation import generate_token
 
 class UserDAO:
   def addNewUser2(self, user_data):
     conn, cursor = db_connect() 
     
-    pw, salt = hashing(user_data['password'])
+    pw, salt = hashing_with_salt(user_data['password'])
     
     users_query = '''INSERT INTO users (first_name, last_name, date_of_birth, gender, phone_number, email_address, password, salt, is_premium) 
                      VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
@@ -16,19 +16,23 @@ class UserDAO:
     conn.close()
 
 
-  def AuthenticateUser2(self, user_data):
+  def checkUser2(self, user_data):
     conn, cursor = db_connect()
     
-    auth_token = generate_token()
+    pw = normal_hashing(user_data['password'])
+
+    users_query = '''SELECT password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email=%s'''
+
+    cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
+    user_info2 = cursor.fetchone()
+    conn.close()
+    return user_info2
 
     
-
-
-
   def updateUser2(self, user_data):
     conn, cursor = db_connect()
     
-    pw, salt = hashing(user_data['password'])
+    pw, salt = hashing_with_salt(user_data['password'])
 
     users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
                      WHERE is_deleted=0 and user_id=%s'''
@@ -47,6 +51,7 @@ class UserDAO:
     user_info2 = cursor.fetchone()
     conn.close()
     return user_info2
+  
   
   def deleteUser2(self, user_id):
     conn, cursor = db_connect()

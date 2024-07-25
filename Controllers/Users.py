@@ -1,14 +1,14 @@
 from Models.UserDAO import UserDAO
 from flask import Flask, jsonify, request
-from Authentication import *
+from Authentication_Validation import *
 
 class Users:
    def addNewUser1(self, user_data):
-      if check_user_input_type(user_data):
+      if check_datatypes(user_data):
 
-         if check_valid_data(user_data):
+         if check_phone_and_names(user_data):
 
-            if check_input_len(user_data):
+            if check_datalength(user_data):
                UserDAO().addNewUser2(user_data)
                return jsonify('User added successfully.'), 200
 
@@ -21,18 +21,25 @@ class Users:
       else:
          return jsonify('One or more of the user data is not supported.'), 400
       
-   def AuthenticateUser1(self, user_data):
-      pass
+   def checkUser1(self, user_data):
+      if check_data_auth(user_data):
+         user_info = UserDAO().checkUser2(user_data)
+         if user_info:
+            pass
+         else:
+            pass
+      else:
+         return jsonify('Email, password, and/or first and last names might not be supported'), 400
    
    
    def updateUser1(self, user_data):
-      if check_user_input_type(user_data):
+      if check_datatypes(user_data):
 
-         if check_valid_data(user_data):
+         if check_phone_and_names(user_data):
 
-            if check_input_len(user_data):
-               UserDAO().addNewUser2(user_data)
-               return jsonify('User added successfully.'), 200
+            if check_datalength(user_data):
+               UserDAO().updateUser2(user_data)
+               return jsonify('User updated successfully.'), 200
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
