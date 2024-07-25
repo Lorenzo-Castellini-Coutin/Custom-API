@@ -19,7 +19,7 @@ def new_user():
 def authenticate():
     if request.method == 'POST':
         user_data = request.get_json()
-        return Users().Authenticate1(user_data)
+        return Users().AuthenticateUser1(user_data)
     else:
         return jsonify('Method not allowed.'), 405
     

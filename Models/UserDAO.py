@@ -1,5 +1,5 @@
 from Functions import db_connect
-from Hashing import hashing_with_salt, normal_hashing
+from Hashing import hashing_with_salt, verification_hashing
 from Authentication_Validation import generate_token
 
 class UserDAO:
@@ -22,16 +22,26 @@ class UserDAO:
       return False
 
 
-  def checkUser2(self, user_data):
+  def AuthenticateUser2(self, user_data):
     try:  
       conn, cursor = db_connect()
 
-      users_query = '''SELECT password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email=%s'''
+      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email=%s'''
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
       user_info2 = cursor.fetchone()
-      conn.close()
-      return user_info2
+
+      pw = verification_hashing(user_data['password'], user_info2['salt'])
+      
+      if user_info2['password'] == pw:
+        token = generate_token()
+        is_auth = 1
+        auth_query = '''INSERT INTO authentication_data (user_id, authentication_token, is_authenticated)
+                        VALUES(%s, %s, %s)'''
+        
+        cursor.execute(auth_query, (user_info2['user_id'], token, is_auth))
+        conn.commit()
+        conn.close()
     
     except:
       return False
