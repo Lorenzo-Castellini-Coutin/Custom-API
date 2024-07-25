@@ -19,7 +19,7 @@ class Users:
    
    def updateUser1(self, user_data):
       if len(user_data) == 9:
-         update_user = UserDAO().updateUsers2(user_data)
+         update_user = UserDAO().updateUser2(user_data)
          if update_user:
             return jsonify('User info updated successfully.'), 200
          else:
@@ -37,7 +37,7 @@ class Users:
       
 
    def deleteUser1(self, user_id):
-      delete_user = UserDAO().deleteUsers2(user_id)
+      delete_user = UserDAO().deleteUser2(user_id)
       if delete_user:
          return jsonify('User deleted succesfully.'), 200
       else:
