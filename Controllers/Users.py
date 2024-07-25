@@ -16,7 +16,7 @@ class Users:
                return jsonify('One or more of the user data is longer than expected.'), 400
             
          else:
-            return jsonify('Email, phone number, and/or names might not be correct.'), 400
+            return jsonify('Email, phone number, and/or first and last names might not be correct.'), 400
          
       else:
          return jsonify('One or more of the user data is not supported.'), 400
@@ -26,14 +26,22 @@ class Users:
    
    
    def updateUser1(self, user_data):
-      if len(user_data) == 9:
-         update_user = UserDAO().updateUser2(user_data)
-         if update_user:
-            return jsonify('User info updated successfully.'), 200
+      if check_user_input_type(user_data):
+
+         if check_valid_data(user_data):
+
+            if check_input_len(user_data):
+               UserDAO().addNewUser2(user_data)
+               return jsonify('User added successfully.'), 200
+
+            else:
+               return jsonify('One or more of the user data is longer than expected.'), 400
+            
          else:
-            return jsonify('Something went wrong in the database while performing your request.'), 500
+            return jsonify('Email, phone number, and/or first and last names might not be correct.'), 400
+         
       else:
-         return jsonify('Something went wrong with the info provided.'), 400
+         return jsonify('One or more of the user data is not supported.'), 400
       
       
    def getUserById1(self, user_id):
