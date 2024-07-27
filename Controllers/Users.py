@@ -29,10 +29,13 @@ class Users:
    def AuthenticateUser1(self, user_data):
       if check_data_auth(user_data):
          user_info = UserDAO().AuthenticateUser2(user_data)
+         
          if user_info:
-            pass
+            return jsonify('User authenticated.'), 200
+         
          else:
-            pass
+            return jsonify('Something went wrong in the authentication process.'), 500
+
       else:
          return jsonify('Email, password, and/or first and last names might not be supported'), 400
    
