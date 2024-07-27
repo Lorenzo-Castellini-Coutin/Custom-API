@@ -46,6 +46,7 @@ class UserDAO:
         conn.close()
     
     except:
+      conn.close()
       return False
 
     
@@ -53,14 +54,16 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
     
-      auth_query = '''SELECT is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, user_data['user_id'])
 
       auth_user = cursor.fetchone()
 
-      if auth_user:
+      current_date = datetime.now()
+
+      if auth_user and current_date <= auth_user[1]:
         pw, salt = hashing_with_salt(user_data['password'])
 
         users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
@@ -71,10 +74,21 @@ class UserDAO:
         conn.close()
         return True
       
+      elif auth_user and current_date > auth_user[1]:
+        auth_query = '''UPDATE authentication_data SET is_authenticated=0
+                        WHERE user_id=%s'''
+        
+        cursor.execute(auth_query,user_data['user_id'])
+        conn.commit()
+        conn.close()
+
       else:
+        conn.close()
         return False
+        
 
     except:
+      conn.close()
       return False
 
   
@@ -82,14 +96,16 @@ class UserDAO:
     try:  
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, (user_id,))
 
       auth_user = cursor.fetchone()
 
-      if auth_user:
+      current_date = datetime.now()
+
+      if auth_user and current_date <= auth_user[1] :
         users_query = '''SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address, is_premium FROM users 
                          WHERE is_deleted=0 and user_id=%s'''
     
@@ -98,7 +114,16 @@ class UserDAO:
         conn.close()
         return user_info2
 
+      elif auth_user and current_date > auth_user[1]:
+        auth_query = '''UPDATE authentication_data SET is_authenticated=0
+                        WHERE user_id=%s'''
+        
+        cursor.execute(auth_query, (user_id,))
+        conn.commit()
+        conn.close()
+
       else:
+        conn.close()
         return False
       
     except:
@@ -109,14 +134,16 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated, session_expiration date FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, (user_id,))
 
       auth_user = cursor.fetchone()
+
+      current_date = datetime.now()
       
-      if auth_user:
+      if auth_user and current_date <= auth_user[1]:
         users_query = '''UPDATE users SET is_deleted=1 WHERE user_id=%s'''
 
         cursor.execute(users_query, (user_id,))
@@ -128,7 +155,16 @@ class UserDAO:
         conn.close()
         return True
       
+      elif auth_user and current_date > auth_user[1]:
+        auth_query = '''UPDATE authentication_data SET is_authenticated=0
+                        WHERE user_id=%s'''
+        
+        cursor.execute(auth_query, (user_id,))
+        conn.commit()
+        conn.close()
+
       else:
+        conn.close()
         return False
 
     except:
