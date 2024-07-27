@@ -15,7 +15,7 @@ class Users:
                   return jsonify('User added successfully.'), 200
                   
                else:
-                  return jsonify('Something went wrong with adding the user.'), 500
+                  return jsonify('Something went wrong with adding the new user.'), 500
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
@@ -26,6 +26,7 @@ class Users:
       else:
          return jsonify('One or more of the user data is not supported.'), 400
       
+      
    def AuthenticateUser1(self, user_data):
       if check_data_auth(user_data):
          user_info = UserDAO().AuthenticateUser2(user_data)
@@ -34,7 +35,7 @@ class Users:
             return jsonify('User authenticated.'), 200
          
          else:
-            return jsonify('Something went wrong in the authentication process.'), 500
+            return jsonify('The user might not exist/already deleted, or something went wrong in the authentication process.'), 500
 
       else:
          return jsonify('Email, password, and/or first and last names might not be supported'), 400
@@ -49,10 +50,10 @@ class Users:
                user_update = UserDAO().updateUser2(user_data)
                
                if user_update:
-                  return jsonify('User updated successfully.'), 200
+                  return jsonify('User information updated successfully.'), 200
                
                else:
-                  return jsonify('Something went wrong updating the user'), 500
+                  return jsonify('The user might not exist/already deleted, or something went wrong updating the user.'), 500
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
@@ -65,11 +66,17 @@ class Users:
       
       
    def getUserById1(self, user_id):
-      user_info = UserDAO().getUserById2(user_id)
-      if user_info is None:
-         return jsonify('User not found or was already deleted.'), 400
+      if user_id > 0:
+         user_info = UserDAO().getUserById2(user_id)
+         
+         if user_info:
+            return jsonify(user_info), 200
+         
+         else:
+            return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
+      
       else:
-         return jsonify(user_info), 200
+         return jsonify('User ID is of unsupported type.'), 400
       
 
    def deleteUser1(self, user_id):
@@ -77,6 +84,6 @@ class Users:
       if delete_user:
          return jsonify('User deleted succesfully.'), 200
       else:
-         return jsonify('User was either already deleted or not deleted successfully.')
+         return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
       
 
