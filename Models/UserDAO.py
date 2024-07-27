@@ -50,7 +50,7 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
     
-      auth_query = '''SELECT authentication_token, is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, user_data['user_id'])
@@ -79,7 +79,7 @@ class UserDAO:
     try:  
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT authentication_token, is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, (user_id,))
@@ -106,7 +106,7 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT authentication_token, is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, (user_id,))

@@ -5,8 +5,8 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT authentication_token FROM authentication_data
-                      WHERE is_authenticated=1, user_id=%s, user_id=%s'''
+      auth_query = '''SELECT is_authenticated FROM authentication_data
+                      WHERE user_id=%s, user_id=%s'''
       
       cursor.execute(auth_query, (message['sender_user_id'], message['recipient_user_id']))
       
@@ -37,8 +37,8 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT authentication_token FROM authentication_data
-                      WHERE is_authenticated=1, user_id=%s'''
+      auth_query = '''SELECT is_authenticated FROM authentication_data
+                      WHERE user_id=%s'''
       
       cursor.execute(auth_query, (new_message['sender_user_id']))
 
