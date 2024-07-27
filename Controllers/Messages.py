@@ -32,16 +32,28 @@ class Messages:
 
   
   def deleteMessage1(self, message_id):
-    delete_message = MessageDAO().deleteMessage2(message_id)
-    if delete_message:  
-      return jsonify('Message deleted successfully.'), 200
+    if type(message_id) == int and message_id > 0:  
+      delete_message = MessageDAO().deleteMessage2(message_id)
+      
+      if delete_message:  
+        return jsonify('Message deleted successfully.'), 200
+      
+      else:
+        return jsonify('Message was either already deleted or could not be deleted.'), 400
+    
     else:
-      return jsonify('Message was either already deleted or could not be deleted.'), 400
+      return jsonify('The message id is of invalid type or not supported.'), 400
     
 
   def getMessageById1(self, message_id):
-    message_id1 = MessageDAO().getMessageById2(message_id)
-    if message_id1 is None:
-      return jsonify('Message was either not found or already deleted.'), 400
+    if type(message_id) == int and message_id > 0:
+      message_id1 = MessageDAO().getMessageById2(message_id)
+      
+      if message_id1 is None:
+        return jsonify('Message was either not found or already deleted.'), 400
+      
+      else:
+        return jsonify(message_id1), 200
+      
     else:
-      return jsonify(message_id1), 200
+      return jsonify('The message id is of invalid type or not supported.'), 400

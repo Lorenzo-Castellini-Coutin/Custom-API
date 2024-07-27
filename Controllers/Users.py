@@ -66,21 +66,30 @@ class Users:
       
       
    def getUserById1(self, user_id):
-      user_info1 = UserDAO().getUserById2(user_id)
+      if type(user_id) == int and user_id > 0:
+         user_info1 = UserDAO().getUserById2(user_id)
          
-      if user_info1:
-         return jsonify(user_info1), 200
+         if user_info1:
+            return jsonify(user_info1), 200
          
-      else:
-         return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
+         else:
+            return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
       
+      else:
+         return jsonify('The user id is of invalid type or not supported.'), 400
       
 
    def deleteUser1(self, user_id):
-      delete_user1 = UserDAO().deleteUser2(user_id)
-      if delete_user1:
-         return jsonify('User deleted succesfully.'), 200
+      if type(user_id) == int and user_id > 0:
+         delete_user1 = UserDAO().deleteUser2(user_id)
+         
+         if delete_user1:
+            return jsonify('User deleted succesfully.'), 200
+         
+         else:
+            return jsonify('The user might not exist/already deleted, or something went wrong with deleting the user.'), 500
+      
       else:
-         return jsonify('The user might not exist/already deleted, or something went wrong with deleting the user.'), 500
+         return jsonify('The user id is of invalid type or not supported.'), 400
       
 

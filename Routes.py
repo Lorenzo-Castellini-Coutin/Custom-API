@@ -24,7 +24,7 @@ def authenticate():
         return jsonify('Method not allowed.'), 405
     
 
-@app.route('/app/users/<int:user_id>', methods = ['GET', 'DELETE', 'PUT'])
+@app.route('/app/users/<user_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_users(user_id):
     if request.method == 'GET':
         return Users().getUserById1(user_id)
@@ -45,7 +45,7 @@ def new_message():
         return jsonify('Method not allowed.'), 405
     
 
-@app.route('/app/messages/<int:message_id>', methods = ['GET', 'DELETE', 'PUT'])
+@app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_messages(message_id):
     if request.method == 'GET':
         return Messages().getMessageById1(message_id)
