@@ -27,6 +27,7 @@ class MessageDAO:
         return True
 
       else:
+        conn.close()
         return False
 
     except:
@@ -45,7 +46,6 @@ class MessageDAO:
       auth_user = cursor.fetchone()
 
       if auth_user:
-
         messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
                             WHERE is_deleted=0 and message_id=%s'''
     
@@ -60,6 +60,7 @@ class MessageDAO:
         return True
 
       else:
+        conn.close()
         return False
 
     except:
