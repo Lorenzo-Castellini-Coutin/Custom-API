@@ -38,7 +38,7 @@ class Users:
             return jsonify('The user might not exist/already deleted, or something went wrong in the authentication process.'), 500
 
       else:
-         return jsonify('Email address, password, and/or first and last names might not be supported/incorrect.'), 400
+         return jsonify('Email address, password, and/or first and last name might not be supported/incorrect.'), 400
    
    
    def updateUser1(self, user_data):
@@ -53,7 +53,7 @@ class Users:
                   return jsonify('User information updated successfully.'), 200
                
                else:
-                  return jsonify('The user might not exist/already deleted, or something went wrong updating the user.'), 500
+                  return jsonify('The user might not exist/already deleted, or something went wrong with updating the user.'), 500
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
@@ -72,7 +72,7 @@ class Users:
          return jsonify(user_info1), 200
          
       else:
-         return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
+         return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
       
       
 
@@ -81,6 +81,6 @@ class Users:
       if delete_user1:
          return jsonify('User deleted succesfully.'), 200
       else:
-         return jsonify('The user might not exist/already deleted, or something went wrong deleting the user.'), 500
+         return jsonify('The user might not exist/already deleted, or something went wrong with deleting the user.'), 500
       
 

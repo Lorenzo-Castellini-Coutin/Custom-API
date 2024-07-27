@@ -25,7 +25,7 @@ class Messages:
         return jsonify('Message was successfully updated.'), 200
         
       else:
-        return jsonify('The message might not exist/already been deleted, or something went wrong updating the message.'), 500
+        return jsonify('The message might not exist/already been deleted, or something went wrong with updating the message.'), 500
         
     else:
       return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
