@@ -39,7 +39,7 @@ class UserDAO:
         expiration_date = datetime.now() + timedelta(days = 7)
         
         auth_query = '''INSERT INTO authentication_data (user_id, authentication_token, is_authenticated, session_expiration_date)
-                        VALUES(%s, %s, %s)'''
+                        VALUES(%s, %s, %s, %s)'''
         
         cursor.execute(auth_query, (user_info2['user_id'], token, is_auth, expiration_date))
         conn.commit()

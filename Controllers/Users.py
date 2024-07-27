@@ -6,7 +6,7 @@ class Users:
    def addNewUser1(self, user_data):
       if check_datatypes(user_data):
 
-         if check_phone_and_names(user_data):
+         if check_phone_date_email_names(user_data):
 
             if check_datalength(user_data):
                user_add = UserDAO().addNewUser2(user_data)
@@ -44,7 +44,7 @@ class Users:
    def updateUser1(self, user_data):
       if check_datatypes(user_data):
 
-         if check_phone_and_names(user_data):
+         if check_phone_date_email_names(user_data):
 
             if check_datalength(user_data):
                user_update1 = UserDAO().updateUser2(user_data)
