@@ -69,13 +69,14 @@ class MessageDAO:
   def deleteMessage2(self, del_message):  
     try:
       conn, cursor = db_connect()
+
       messages_query = '''UPDATE messages SET is_deleted=1 
                           WHERE message_id=%s'''
     
       cursor.execute(messages_query, (del_message,))
     
       recipients_query = '''UPDATE recipient SET is_deleted=1 
-                          WHERE message_id=%s'''
+                            WHERE message_id=%s'''
     
       cursor.execute(recipients_query, (del_message,))
       conn.commit()

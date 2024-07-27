@@ -9,8 +9,13 @@ class Users:
          if check_phone_and_names(user_data):
 
             if check_datalength(user_data):
-               UserDAO().addNewUser2(user_data)
-               return jsonify('User added successfully.'), 200
+               user_add = UserDAO().addNewUser2(user_data)
+               
+               if user_add:
+                  return jsonify('User added successfully.'), 200
+                  
+               else:
+                  return jsonify('Something went wrong with adding the user.'), 500
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
@@ -38,8 +43,13 @@ class Users:
          if check_phone_and_names(user_data):
 
             if check_datalength(user_data):
-               UserDAO().updateUser2(user_data)
-               return jsonify('User updated successfully.'), 200
+               user_update = UserDAO().updateUser2(user_data)
+               
+               if user_update:
+                  return jsonify('User updated successfully.'), 200
+               
+               else:
+                  return jsonify('Something went wrong updating the user'), 500
 
             else:
                return jsonify('One or more of the user data is longer than expected.'), 400
