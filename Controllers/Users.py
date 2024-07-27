@@ -24,7 +24,7 @@ class Users:
             return jsonify('Email, phone number, and/or first and last names might not be valid.'), 400
          
       else:
-         return jsonify('One or more of the user data is not supported.'), 400
+         return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
       
       
    def AuthenticateUser1(self, user_data):
@@ -62,21 +62,18 @@ class Users:
             return jsonify('Email, phone number, and/or first and last names might not be correct.'), 400
          
       else:
-         return jsonify('One or more of the user data is not supported.'), 400
+         return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
       
       
    def getUserById1(self, user_id):
-      if user_id > 0:
-         user_info = UserDAO().getUserById2(user_id)
+      user_info = UserDAO().getUserById2(user_id)
          
-         if user_info:
-            return jsonify(user_info), 200
+      if user_info:
+         return jsonify(user_info), 200
          
-         else:
-            return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
-      
       else:
-         return jsonify('User ID is of unsupported type.'), 400
+         return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
+      
       
 
    def deleteUser1(self, user_id):

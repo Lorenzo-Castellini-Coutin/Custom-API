@@ -11,10 +11,10 @@ class Messages:
         return jsonify('Message sent successfully.'), 200
       
       else:
-        return jsonify('Something went wrong sending the message.'), 500
+        return jsonify('Something went wrong with sending the message.'), 500
 
     else:
-      return jsonify('One or more of the user data is not supported.'), 400
+      return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
     
 
   def updateMessage1(self, new_message):
@@ -25,10 +25,10 @@ class Messages:
         return jsonify('Message was successfully updated.'), 200
         
       else:
-        return jsonify('Something went wrong updating the message.'), 500
+        return jsonify('The message might not exist/already been deleted, or something went wrong updating the message.'), 500
         
     else:
-      return jsonify('One or more of the user data is not supported.'), 400
+      return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
 
   
   def deleteMessage1(self, message_id):
