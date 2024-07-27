@@ -61,7 +61,7 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
-      current_date = datetime.now()
+      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
       if auth_user and current_date <= auth_user[1]:
         pw, salt = hashing_with_salt(user_data['password'])
@@ -103,7 +103,8 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
-      current_date = datetime.now()
+      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
 
       if auth_user and current_date <= auth_user[1] :
         users_query = '''SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address, is_premium FROM users 
@@ -141,7 +142,8 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
-      current_date = datetime.now()
+      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
       
       if auth_user and current_date <= auth_user[1]:
         users_query = '''UPDATE users SET is_deleted=1 WHERE user_id=%s'''
