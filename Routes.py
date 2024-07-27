@@ -57,3 +57,6 @@ def existing_messages(message_id):
     else:
         return jsonify('Method is not allowed.'), 405
 
+
+#Notes:
+#The number '1' denotes a controller function, while the number '2' denotes model function
