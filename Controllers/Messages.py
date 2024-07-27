@@ -1,20 +1,35 @@
 from Models.MessageDAO import MessageDAO
 from flask import Flask, jsonify, request
+from Authentication_Validation import *
 
 class Messages:
   def sendNewMessage1(self, message):
-    new_message = MessageDAO().sendNewMessage2(message)
-    if new_message:  
-      return jsonify('Message sent succesfully.'), 200
+    if check_data_messages(message):
+      new_message = MessageDAO().sendNewMessage2(message)
+
+      if new_message:
+        return jsonify('Message sent successfully.'), 200
+      
+      else:
+        return jsonify('Something went wrong sending the message.'), 500
+
     else:
-      return jsonify('Message could not be sent.'), 500
+      return jsonify('One or more of the user data is not supported.'), 400
+    
 
   def updateMessage1(self, new_message):
-    update_message = MessageDAO().updateMessage2(new_message)
-    if update_message:
-      return jsonify('Message updated successfully.'), 200
+    if type(new_message['message_id']) == int and check_data_messages(new_message):
+      message_update = MessageDAO().updateMessage2(new_message)
+
+      if message_update:
+        return jsonify('Message was successfully updated.'), 200
+        
+      else:
+        return jsonify('Something went wrong updating the message.'), 500
+        
     else:
-      return jsonify('Message was either already deleted or could not be updated.'), 500
+      return jsonify('One or more of the user data is not supported.'), 400
+
   
   def deleteMessage1(self, message_id):
     delete_message = MessageDAO().deleteMessage2(message_id)
@@ -22,6 +37,7 @@ class Messages:
       return jsonify('Message deleted successfully.'), 200
     else:
       return jsonify('Message was either already deleted or could not be deleted.'), 400
+    
 
   def getMessageById1(self, message_id):
     message_id1 = MessageDAO().getMessageById2(message_id)
