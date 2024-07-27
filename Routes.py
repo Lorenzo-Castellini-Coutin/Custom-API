@@ -55,8 +55,12 @@ def existing_messages(message_id):
         new_message = request.get_json()
         return Messages().updateMessage1(new_message)
     else:
-        return jsonify('Method is not allowed.'), 405
+        return jsonify('Method not allowed.'), 405
+
 
 
 #Notes:
 #The number '1' denotes a controller function, while the number '2' denotes model function
+#Error codes 400 mean bad request, while 500 means db side error
+
+#Author: Lorenzo Castellini Coutin

@@ -29,16 +29,16 @@ class Users:
       
    def AuthenticateUser1(self, user_data):
       if check_data_auth(user_data):
-         user_info = UserDAO().AuthenticateUser2(user_data)
+         user_info1 = UserDAO().AuthenticateUser2(user_data)
          
-         if user_info:
+         if user_info1:
             return jsonify('User authenticated.'), 200
          
          else:
             return jsonify('The user might not exist/already deleted, or something went wrong in the authentication process.'), 500
 
       else:
-         return jsonify('Email, password, and/or first and last names might not be supported'), 400
+         return jsonify('Email address, password, and/or first and last names might not be supported/incorrect.'), 400
    
    
    def updateUser1(self, user_data):
@@ -47,9 +47,9 @@ class Users:
          if check_phone_and_names(user_data):
 
             if check_datalength(user_data):
-               user_update = UserDAO().updateUser2(user_data)
+               user_update1 = UserDAO().updateUser2(user_data)
                
-               if user_update:
+               if user_update1:
                   return jsonify('User information updated successfully.'), 200
                
                else:
@@ -66,10 +66,10 @@ class Users:
       
       
    def getUserById1(self, user_id):
-      user_info = UserDAO().getUserById2(user_id)
+      user_info1 = UserDAO().getUserById2(user_id)
          
-      if user_info:
-         return jsonify(user_info), 200
+      if user_info1:
+         return jsonify(user_info1), 200
          
       else:
          return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
@@ -77,10 +77,10 @@ class Users:
       
 
    def deleteUser1(self, user_id):
-      delete_user = UserDAO().deleteUser2(user_id)
-      if delete_user:
+      delete_user1 = UserDAO().deleteUser2(user_id)
+      if delete_user1:
          return jsonify('User deleted succesfully.'), 200
       else:
-         return jsonify('The user might not exist/already deleted, or something went wrong retrieving the user.'), 500
+         return jsonify('The user might not exist/already deleted, or something went wrong deleting the user.'), 500
       
 
