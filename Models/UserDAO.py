@@ -32,7 +32,7 @@ class UserDAO:
     try:  
       conn, cursor = db_connect()
 
-      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email=%s'''
+      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email_address=%s'''
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
       
@@ -48,7 +48,7 @@ class UserDAO:
         auth_query = '''INSERT INTO authentication_data (user_id, authentication_token, is_authenticated, session_expiration_date)
                         VALUES(%s, %s, %s, %s)'''
         
-        cursor.execute(auth_query, (user_info2['user_id'], token, is_auth, expiration_date))
+        cursor.execute(auth_query, (user_info2[0], token, is_auth, expiration_date))
         conn.commit()
         
         auth_user2 = cursor.lastrowid
