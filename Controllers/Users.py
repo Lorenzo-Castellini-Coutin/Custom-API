@@ -5,23 +5,23 @@ from Authentication_Validation import *
 class Users:
    def addNewUser1(self, user_data):
       checks = check_new_user_data(user_data)
-
-         if check_phone_date_email_names(user_data):
-
-            if check_datalength(user_data):
-               user_add = UserDAO().addNewUser2(user_data)
-               
-               if user_add:
-                  return jsonify('User added successfully.'), 200
-                  
-               else:
-                  return jsonify('Something went wrong with adding the new user.'), 500
+      if checks == 1:
+            return jsonify('Either the names, email address, password, or all of the above execeeded the maximum length supported.'), 400
+      
+      elif checks == 2:
+            return jsonify('Either the names, email address, password, or all of the above are of incorrect/unsupported type.'), 400
+      
+      elif checks == 3:
+         return jsonify('Verify the user-supplied names, password, and email address.'), 400
+      
+      else:
+         adduser1 = UserDAO().addNewUser2(user_data)
 
          if adduser1:
-            return jsonify(f'User account created. The user is: {adduser1}'), 200
+            return jsonify(f'User account created. The user id is: {adduser1}'), 200
          
          else:
-            return jsonify('Something went wrong while creating the account.'), 500
+            return jsonify('Something went wrong while creating the new account.'), 500
          
       
    def AuthenticateUser1(self, user_data):
