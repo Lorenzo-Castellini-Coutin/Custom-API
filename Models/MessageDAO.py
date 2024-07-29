@@ -34,10 +34,10 @@ class MessageDAO:
         return new_message2
 
       else:
-        conn.close()
         return False
 
-    except:
+    except Exception as e:
+      print(f'An error ocurred in sendNewMessage: {e}')
       return False
     
     finally:
@@ -70,10 +70,10 @@ class MessageDAO:
         return True
 
       else:
-        conn.close()
         return False
 
-    except:
+    except Exception as e:
+      print(f'An error ocurred in updateMessage: {e}')
       return False
     
     finally:
@@ -95,14 +95,15 @@ class MessageDAO:
     
       cursor.execute(recipients_query, (del_message,))
       conn.commit()
-      conn.close()
       return True
     
-    except:
+    except Exception as e:
+      print(f'An error ocurred in deleteMessage: {e}')
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
 
 
   def getMessageById2(self, message_id):
@@ -123,10 +124,12 @@ class MessageDAO:
       conn.close()
       return message_id2
     
-    except:
+    except Exception as e:
+      print(f'An error ocurred in getMessageByID: {e}')
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
     
   
