@@ -101,10 +101,8 @@ class UserDAO:
         
         cursor.execute(auth_query,user_data['user_id'])
         conn.commit()
-        conn.close()
 
       else:
-        conn.close()
         return False
         
 
@@ -155,7 +153,6 @@ class UserDAO:
         conn.close()
 
       else:
-        conn.close()
         return False
       
     except Exception as e:
@@ -190,7 +187,6 @@ class UserDAO:
 
         cursor.execute(auth_query, (user_id,))
         conn.commit()
-        conn.close()
         return True
       
       elif auth_user and current_date > auth_user[1]:
@@ -199,10 +195,8 @@ class UserDAO:
         
         cursor.execute(auth_query, (user_id,))
         conn.commit()
-        conn.close()
 
       else:
-        conn.close()
         return False
 
     except Exception as e:
