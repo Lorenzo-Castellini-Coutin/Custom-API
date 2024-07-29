@@ -29,9 +29,8 @@ class MessageDAO:
 
         cursor.execute(messages_query2, (message['subject'], message['body']))
 
-        new_message2 = cursor.fetchone()
+        new_message2 = cursor.lastrowid
         
-        conn.close()
         return new_message2
 
       else:
@@ -42,7 +41,8 @@ class MessageDAO:
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
 
     
   def updateMessage2(self, new_message):
@@ -67,7 +67,6 @@ class MessageDAO:
     
         cursor.execute(recipients_query, (new_message['recipient_user_id'], new_message['message_id']))
         conn.commit()
-        conn.close()
         return True
 
       else:
@@ -78,7 +77,8 @@ class MessageDAO:
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
 
 
   def deleteMessage2(self, del_message):  
