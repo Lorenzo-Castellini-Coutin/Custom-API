@@ -36,26 +36,27 @@ class UserDAO:
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
       
-      user_info2 = cursor.fetchone()
+      user_db_info = cursor.fetchone()\
+      
 
-      salt = user_info2[2]
+      salt = user_db_info[2]
 
-      pw = verification_hashing(user_data['password'], salt)
+      entered_pw = verification_hashing(user_data['password'], salt)
 
-      original_pw = user_info2[1]
+      original_pw = user_db_info[1]
 
       print(original_pw)
       
-      if original_pw == pw:
+      if original_pw == entered_pw:
         token = generate_token()
         is_auth = 1
        
         expiration_date = datetime.now() + timedelta(days = 7)
         
-        auth_query = '''INSERT INTO authentication_data (user_id, authentication_token, is_authenticated, session_expiration_date)
-                        VALUES(%s, %s, %s, %s)'''
+        auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date)
+                        VALUES(%s, %s, %s)'''
         
-        cursor.execute(auth_query, (user_info2[0], token, is_auth, expiration_date))
+        cursor.execute(auth_query, (token, is_auth, expiration_date))
         conn.commit()
         
         auth_user2 = cursor.lastrowid
