@@ -19,7 +19,8 @@ class UserDAO:
       add_user2 = cursor.lastrowid
       return add_user2
       
-    except:
+    except Exception as e:
+      print('An error ocurred in addNewUser: {e}')
       return False
     
     finally:
@@ -34,11 +35,12 @@ class UserDAO:
       users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email=%s'''
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
+      
       user_info2 = cursor.fetchone()
 
-      pw = verification_hashing(user_data['password'], user_info2['salt'])
+      pw = verification_hashing(user_data['password'], user_info2[2])
       
-      if user_info2['password'] == pw:
+      if user_info2[1] == pw:
         token = generate_token()
         is_auth = 1
         expiration_date = datetime.now() + timedelta(days = 7)
@@ -53,7 +55,8 @@ class UserDAO:
         
         return auth_user2
       
-    except:
+    except Exception as e:
+      print(f'An error occured in AuthenticateUser: {e}')
       return False
     
     finally:
@@ -99,11 +102,12 @@ class UserDAO:
         
 
     except Exception as e:
-      print(e)
+      print('An error ocurred in updateUser: {e}')
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
 
   
   def getUserById2(self, user_id):
@@ -141,11 +145,13 @@ class UserDAO:
         conn.close()
         return False
       
-    except:
+    except Exception as e:
+      print('An error ocurred in getUserById: {e}')
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
   
   
   def deleteUser2(self, user_id):
@@ -186,11 +192,13 @@ class UserDAO:
         conn.close()
         return False
 
-    except:
+    except Exception as e:
+      print('An error ocurred in deleteUser: {e}')
       return False
     
     finally:
-      conn.close()
+      if conn:
+        conn.close()
 
   
   
