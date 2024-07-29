@@ -15,9 +15,10 @@ class UserDAO:
     
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium']))
       conn.commit()
-      conn.close()
-      return True
-
+      
+      add_user2 = cursor.lastrowid
+      return add_user2
+      
     except:
       return False
     

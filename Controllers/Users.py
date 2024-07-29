@@ -5,6 +5,7 @@ from Authentication_Validation import *
 class Users:
    def addNewUser1(self, user_data):
       checks = check_new_user_data(user_data)
+      
       if checks == 1:
             return jsonify('Either the names, email address, password, or all of the above execeeded the maximum length supported.'), 400
       
