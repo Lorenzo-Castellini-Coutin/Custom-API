@@ -98,3 +98,13 @@ class Users:
          return jsonify('The user id is of invalid type or not supported.'), 400
       
 
+
+
+
+
+
+
+#Notes:
+#The numbers 1, 2, 3 are used for error handling in order to return a particular error message given the type of error.
+#The numbers 1 and 2 used in variables mean controller functions and model functions, respectively.
+#Error codes 400 mean bad request from client-side, 200 means that the execution was successful, and 500 is a server-side or db-side error.

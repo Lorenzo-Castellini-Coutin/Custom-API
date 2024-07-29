@@ -60,8 +60,7 @@ def existing_messages(message_id):
 
 
 #Notes:
-#The number '1' denotes a controller function, while the number '2' denotes model function
-#Error codes 400 mean bad request, while 500 means db side error
+#Error codes 400 mean bad request from the client-side.
 
 
 
