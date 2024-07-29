@@ -128,10 +128,16 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
-      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      session_expiration_date = auth_user[1]
+
+      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
+
+      current_date = datetime.now()
+
+      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
 
 
-      if auth_user and current_date <= auth_user[1] :
+      if auth_user and current_date_str <= expiration_date_str:
         users_query = '''SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address, is_premium FROM users 
                          WHERE is_deleted=0 AND user_id=%s'''
     
@@ -140,7 +146,7 @@ class UserDAO:
         conn.close()
         return user_info2
 
-      elif auth_user and current_date > auth_user[1]:
+      elif auth_user and current_date_str > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s'''
         
@@ -153,7 +159,7 @@ class UserDAO:
         return False
       
     except Exception as e:
-      print('An error ocurred in getUserById: {e}')
+      print(f'An error ocurred in getUserById: {e}')
       return False
     
     finally:
@@ -200,7 +206,7 @@ class UserDAO:
         return False
 
     except Exception as e:
-      print('An error ocurred in deleteUser: {e}')
+      print(f'An error ocurred in deleteUser: {e}')
       return False
     
     finally:
