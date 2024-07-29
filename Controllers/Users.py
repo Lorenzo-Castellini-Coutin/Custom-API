@@ -67,7 +67,7 @@ class Users:
             return jsonify('User account was updated with the given information.'), 200
          
          else:
-            return jsonify('Either the user never existed, was already deleted, or something went wrong in the authentication process.'), 500
+            return jsonify('Either the user never existed/was already deleted, or something went wrong in the authentication process.'), 500
       
       
    def getUserById1(self, user_id):
