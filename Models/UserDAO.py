@@ -15,8 +15,16 @@ class UserDAO:
     
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium']))
       conn.commit()
+      
+      users_query2 = '''SELECT user_id FROM users 
+                        WHERE first_name=%s, last_name=%s, email=%s'''
+      
+      cursor.execute(users_query2, (user_data['firstname'], user_data['lastname'], user_data['email']))
+
+      user_add2 = cursor.fetchone()
+      
       conn.close()
-      return True
+      return user_add2
 
     except:
       return False

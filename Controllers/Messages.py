@@ -5,10 +5,10 @@ from Authentication_Validation import *
 class Messages:
   def sendNewMessage1(self, message):
     if check_data_messages(message):
-      new_message = MessageDAO().sendNewMessage2(message)
+      new_message1 = MessageDAO().sendNewMessage2(message)
 
-      if new_message:
-        return jsonify('Message sent successfully.'), 200
+      if new_message1:
+        return jsonify(f'Message sent successfully. The message id for your message is: {new_message1[0]}'), 200
       
       else:
         return jsonify('Something went wrong with sending the message.'), 500

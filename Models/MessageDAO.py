@@ -23,8 +23,16 @@ class MessageDAO:
     
         cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id']))
         conn.commit()
+        
+        messages_query2 = '''SELECT message_id FROM messages 
+                             WHERE subject=%s, body=%s'''
+
+        cursor.execute(messages_query2, (message['subject'], message['body']))
+
+        new_message2 = cursor.fetchone()
+        
         conn.close()
-        return True
+        return new_message2
 
       else:
         conn.close()

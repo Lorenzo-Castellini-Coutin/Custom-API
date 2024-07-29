@@ -9,10 +9,10 @@ class Users:
          if check_phone_date_email_names(user_data):
 
             if check_datalength(user_data):
-               user_add = UserDAO().addNewUser2(user_data)
+               user_add1 = UserDAO().addNewUser2(user_data)
                
-               if user_add:
-                  return jsonify('User added successfully.'), 200
+               if user_add1:
+                  return jsonify(f'User added successfully. Your user id is:{user_add1[0]}'), 200
                   
                else:
                   return jsonify('Something went wrong with adding the new user.'), 500
