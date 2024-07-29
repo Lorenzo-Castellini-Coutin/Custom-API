@@ -18,7 +18,7 @@ class Messages:
     
 
   def updateMessage1(self, new_message):
-    if type(new_message['message_id']) == int and check_data_messages(new_message):
+    if new_message['message_id'].isdigit() and check_data_messages(new_message):
       message_update = MessageDAO().updateMessage2(new_message)
 
       if message_update:
@@ -32,7 +32,7 @@ class Messages:
 
   
   def deleteMessage1(self, message_id):
-    if type(message_id) == int and message_id > 0:  
+    if message_id.isdigit():  
       delete_message = MessageDAO().deleteMessage2(message_id)
       
       if delete_message:  
@@ -46,14 +46,14 @@ class Messages:
     
 
   def getMessageById1(self, message_id):
-    if type(message_id) == int and message_id > 0:
+    if message_id.isdigit():
       message_id1 = MessageDAO().getMessageById2(message_id)
       
-      if message_id1 is None:
-        return jsonify('Message was either not found or already deleted.'), 400
-      
-      else:
+      if message_id1:
         return jsonify(message_id1), 200
+        
+      else:
+        return jsonify('Message was either not found or already deleted.'), 400
       
     else:
       return jsonify('The message id is of invalid type or not supported.'), 400
