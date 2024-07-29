@@ -25,7 +25,7 @@ class MessageDAO:
         conn.commit()
         
         messages_query2 = '''SELECT message_id FROM messages 
-                             WHERE subject=%s, body=%s'''
+                             WHERE subject=%s AND body=%s'''
 
         cursor.execute(messages_query2, (message['subject'], message['body']))
 
@@ -58,12 +58,12 @@ class MessageDAO:
 
       if auth_user:
         messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
-                            WHERE is_deleted=0 and message_id=%s'''
+                            WHERE is_deleted=0 AND message_id=%s'''
     
         cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], new_message['message_id']))
 
         recipients_query = '''UPDATE recipients SET recipient_user_id=%s 
-                              WHERE is_deleted=0 and message_id=%s'''
+                              WHERE is_deleted=0 AND message_id=%s'''
     
         cursor.execute(recipients_query, (new_message['recipient_user_id'], new_message['message_id']))
         conn.commit()
@@ -111,13 +111,13 @@ class MessageDAO:
       conn, cursor = db_connect()
     
       messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, date FROM messages 
-                          WHERE is_deleted=0 and message_id=%s'''
+                          WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(messages_query, (message_id,))
       message_id2 = cursor.fetchone()
     
       recipients_query = '''UPDATE recipient SET is_read=1 
-                            WHERE is_deleted=0 and message_id=%s'''
+                            WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(recipients_query, (message_id,))
       conn.commit()
