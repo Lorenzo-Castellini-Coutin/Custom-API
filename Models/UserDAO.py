@@ -20,6 +20,9 @@ class UserDAO:
 
     except:
       return False
+    
+    finally:
+      conn.close()
 
 
   def AuthenticateUser2(self, user_data):
@@ -46,8 +49,10 @@ class UserDAO:
         conn.close()
     
     except:
-      conn.close()
       return False
+    
+    finally:
+      conn.close()
 
     
   def updateUser2(self, user_data):
@@ -88,8 +93,10 @@ class UserDAO:
         
 
     except:
-      conn.close()
       return False
+    
+    finally:
+      conn.close()
 
   
   def getUserById2(self, user_id):
@@ -129,6 +136,9 @@ class UserDAO:
       
     except:
       return False
+    
+    finally:
+      conn.close()
   
   
   def deleteUser2(self, user_id):
@@ -171,6 +181,9 @@ class UserDAO:
 
     except:
       return False
+    
+    finally:
+      conn.close()
 
   
   

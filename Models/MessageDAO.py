@@ -32,6 +32,9 @@ class MessageDAO:
 
     except:
       return False
+    
+    finally:
+      conn.close()
 
     
   def updateMessage2(self, new_message):
@@ -65,6 +68,9 @@ class MessageDAO:
 
     except:
       return False
+    
+    finally:
+      conn.close()
 
 
   def deleteMessage2(self, del_message):  
@@ -86,6 +92,9 @@ class MessageDAO:
     
     except:
       return False
+    
+    finally:
+      conn.close()
 
 
   def getMessageById2(self, message_id):
@@ -108,5 +117,8 @@ class MessageDAO:
     
     except:
       return False
+    
+    finally:
+      conn.close()
     
   
