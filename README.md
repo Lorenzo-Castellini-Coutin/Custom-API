@@ -13,4 +13,4 @@ For this API, the MVC design pattern was used to develop and organize the codeba
 Make sure you have fully read the repository's license rule before taking any actions.
 
 ### Additional Notes
-The API can be tested using Postman, but make sure to copy the correct route names to ensure it will work in the tests made. Furthermore, this project was done as part of an onboarding for a research group with the purpose of getting familiar with certain libraries and technologies. This being said, this API was developed in such way to compily with the requirements of the project.
+The API can be tested using Postman, but make sure to copy the correct route names and parameters to ensure it will work correctly in the tests made. Furthermore, this project was done as part of an onboarding for a research group with the purpose of getting familiar with certain libraries and technologies. This being said, this API was developed in such way to compily with the requirements of the project, and only features a back-end since it is a back-end position.
