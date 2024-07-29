@@ -32,17 +32,24 @@ class UserDAO:
     try:  
       conn, cursor = db_connect()
 
-      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0, first_name=%s, last_name=%s, email_address=%s'''
+      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0 AND first_name=%s AND last_name=%s AND email_address=%s'''
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
       
       user_info2 = cursor.fetchone()
 
-      pw = verification_hashing(user_data['password'], user_info2[2])
+      salt = user_info2[2]
+
+      pw = verification_hashing(user_data['password'], salt)
+
+      original_pw = user_info2[1]
+
+      print(original_pw)
       
-      if user_info2[1] == pw:
+      if original_pw == pw:
         token = generate_token()
         is_auth = 1
+       
         expiration_date = datetime.now() + timedelta(days = 7)
         
         auth_query = '''INSERT INTO authentication_data (user_id, authentication_token, is_authenticated, session_expiration_date)
@@ -81,7 +88,7 @@ class UserDAO:
         pw, salt = hashing_with_salt(user_data['password'])
 
         users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
-                         WHERE is_deleted=0 and user_id=%s'''
+                         WHERE is_deleted=0 AND user_id=%s'''
     
         cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium'], user_data['user_id']))
         conn.commit()
@@ -126,7 +133,7 @@ class UserDAO:
 
       if auth_user and current_date <= auth_user[1] :
         users_query = '''SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address, is_premium FROM users 
-                         WHERE is_deleted=0 and user_id=%s'''
+                         WHERE is_deleted=0 AND user_id=%s'''
     
         cursor.execute(users_query, (user_id,))
         user_info2 = cursor.fetchone()

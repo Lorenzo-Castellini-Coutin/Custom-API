@@ -75,7 +75,7 @@ class Users:
          user_info1 = UserDAO().getUserById2(user_id)
          
          if user_info1:
-            return jsonify(user_info1,), 200
+            return jsonify(user_info1), 200
          
          else:
             return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
