@@ -20,7 +20,7 @@ class UserDAO:
       return add_user2
       
     except Exception as e:
-      print('An error ocurred in addNewUser: {e}')
+      print(f'An error ocurred in addNewUser: {e}')
       return False
     
     finally:
@@ -109,7 +109,7 @@ class UserDAO:
         
 
     except Exception as e:
-      print('An error ocurred in updateUser: {e}')
+      print(f'An error ocurred in updateUser: {e}')
       return False
     
     finally:
