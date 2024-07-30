@@ -1,18 +1,28 @@
 from Functions import db_connect
+from datetime import datetime
 
 class MessageDAO:
   def sendNewMessage2(self, message):
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT is_authenticated FROM authentication_data
+      auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s AND user_id=%s'''
       
       cursor.execute(auth_query, (message['sender_user_id'], message['recipient_user_id']))
+
+      auth_user = cursor.fetchone()
+
+      session_expiration_date = auth_user[1]
+
+      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
+
+      current_date = datetime.now()
+
+      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
+
       
-      auth_users = cursor.fetchone()
-      
-      if auth_users:
+      if auth_user and current_date_str <= expiration_date_str:
         messages_query = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body) 
                             VALUES(%s, %s, %s, %s, %s)'''
     
@@ -33,8 +43,12 @@ class MessageDAO:
         
         return new_message2
 
-      else:
-        return False
+      elif auth_user and current_date_str > session_expiration_date:
+        auth_query = '''UPDATE authentication_data SET is_authenticated=0
+                        WHERE user_id=%s AND user_id=%s'''
+        
+        cursor.execute(auth_query, (message['sender_user_id'], message['recipient_user_id']))
+        conn.commit()
 
     except Exception as e:
       print(f'An error ocurred in sendNewMessage: {e}')
@@ -49,14 +63,22 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT is_authenticated FROM authentication_data
-                      WHERE user_id=%s'''
+      auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
+                      WHERE user_id=%s AND user_id=%s'''
       
       cursor.execute(auth_query, (new_message['sender_user_id']))
 
       auth_user = cursor.fetchone()
 
-      if auth_user:
+      session_expiration_date = auth_user[1]
+
+      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
+
+      current_date = datetime.now()
+
+      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
+
+      if auth_user and current_date_str <= expiration_date_str:
         messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
                             WHERE is_deleted=0 AND message_id=%s'''
     
@@ -69,8 +91,12 @@ class MessageDAO:
         conn.commit()
         return True
 
-      else:
-        return False
+      elif auth_user and current_date_str > session_expiration_date:
+        auth_query = '''UPDATE authentication_data SET is_authenticated=0
+                        WHERE user_id=%s AND user_id=%s'''
+        
+        cursor.execute(auth_query, (new_message['sender_user_id']))
+        conn.commit()
 
     except Exception as e:
       print(f'An error ocurred in updateMessage: {e}')
