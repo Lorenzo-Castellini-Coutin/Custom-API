@@ -151,8 +151,7 @@ class UserDAO:
         
         cursor.execute(auth_query, (user_id,))
         conn.commit()
-        conn.close()
-
+    
       else:
         return False
       
