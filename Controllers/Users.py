@@ -7,13 +7,13 @@ class Users:
       checks = check_new_user_data(user_data)
       
       if checks == 1:
-            return jsonify('Either the names, email address, password, or all of the above execeeded the maximum length supported.'), 400
+            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 2:
-            return jsonify('Either the names, email address, password, or all of the above are of incorrect/unsupported type.'), 400
+            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 3:
-         return jsonify('Verify the user-supplied names, password, and email address.'), 400
+            return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
       
       else:
          adduser1 = UserDAO().addNewUser2(user_data)
@@ -29,13 +29,13 @@ class Users:
       checks = check_auth_data(user_data)
 
       if checks == 1:
-            return jsonify('Either the names, email address, password, or all of the above execeeded the maximum length supported.'), 400
+            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 2:
-            return jsonify('Either the names, email address, password, or all of the above are of incorrect/unsupported type.'), 400
+            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 3:
-         return jsonify('Verify the user-supplied names, password, and email address.'), 400
+         return jsonify('Verify that the user-supplied credentials are correct/accurate.'), 400
 
       else:
          user_auth1 = UserDAO().AuthenticateUser2(user_data)
@@ -44,7 +44,7 @@ class Users:
             return jsonify('User authenticated.'), 200
          
          else:
-            return jsonify('Either the user never existed/was already deleted, or something went wrong in the authentication process.'), 500
+            return jsonify('Either the user never existed/was already deleted, or something went wrong in authentication.'), 500
 
 
    
@@ -52,13 +52,13 @@ class Users:
       checks = check_new_user_data(user_data)
 
       if checks == 1:
-         return jsonify('Some or all of the user-supplied data exceeded the maximum length supported.'), 400
+         return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 2:
-         return jsonify('Some or all of the user-supplied data are of incorrect/unsupported type.'), 400
+         return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
       elif checks == 3:
-         return jsonify('Verify the user-supplied names, phone number, email address, and date of birth.'), 400
+         return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
       
       else:
          adduser1 = UserDAO().updateUser2(user_data)
@@ -67,7 +67,7 @@ class Users:
             return jsonify('User account was updated with the given information.'), 200
          
          else:
-            return jsonify('Either the user never existed/was already deleted, or something went wrong in the authentication process.'), 500
+            return jsonify('Either the user never existed/was already deleted, or something went wrong in the updating.'), 500
       
       
    def getUserById1(self, user_id):
