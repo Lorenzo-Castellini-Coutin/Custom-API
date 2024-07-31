@@ -36,9 +36,8 @@ class UserDAO:
 
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
       
-      user_db_info = cursor.fetchone()\
+      user_db_info = cursor.fetchone()
       
-
       salt = user_db_info[2]
 
       entered_pw = verification_hashing(user_data['password'], salt)
@@ -51,7 +50,7 @@ class UserDAO:
         token = generate_token()
         is_auth = 1
        
-        expiration_date = datetime.now() + timedelta(days = 7)
+        expiration_date = datetime.now() + timedelta(hours = 1)
         
         auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date)
                         VALUES(%s, %s, %s)'''
@@ -83,9 +82,11 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
+      session_expiration_date = auth_user[1]
+
       current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-      if auth_user and current_date <= auth_user[1]:
+      if auth_user and current_date <= session_expiration_date:
         pw, salt = hashing_with_salt(user_data['password'])
 
         users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
@@ -96,12 +97,13 @@ class UserDAO:
         conn.close()
         return True
       
-      elif auth_user and current_date > auth_user[1]:
+      elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s'''
         
         cursor.execute(auth_query,user_data['user_id'])
         conn.commit()
+        return False
 
       else:
         return False
@@ -151,6 +153,7 @@ class UserDAO:
         
         cursor.execute(auth_query, (user_id,))
         conn.commit()
+        return False
     
       else:
         return False
@@ -175,10 +178,12 @@ class UserDAO:
 
       auth_user = cursor.fetchone()
 
+      session_expiration_date = auth_user[1]
+
       current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
       
-      if auth_user and current_date <= auth_user[1]:
+      if auth_user and current_date <= session_expiration_date:
         users_query = '''UPDATE users SET is_deleted=1 WHERE user_id=%s'''
 
         cursor.execute(users_query, (user_id,))
@@ -189,12 +194,13 @@ class UserDAO:
         conn.commit()
         return True
       
-      elif auth_user and current_date > auth_user[1]:
+      elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s'''
         
         cursor.execute(auth_query, (user_id,))
         conn.commit()
+        return False
 
       else:
         return False
