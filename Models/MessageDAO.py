@@ -71,13 +71,9 @@ class MessageDAO:
 
       session_expiration_date = auth_user[1]
 
-      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
-
       current_date = datetime.now()
 
-      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
-
-      if auth_user and current_date_str <= expiration_date_str:
+      if auth_user and current_date <= session_expiration_date:
         messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
                             WHERE is_deleted=0 AND message_id=%s'''
     
@@ -90,7 +86,7 @@ class MessageDAO:
         conn.commit()
         return True
 
-      elif auth_user and current_date_str > session_expiration_date:
+      elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s AND user_id=%s'''
         
@@ -146,7 +142,6 @@ class MessageDAO:
 
       cursor.execute(recipients_query, (message_id,))
       conn.commit()
-      conn.close()
       return message_id2
     
     except Exception as e:
