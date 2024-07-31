@@ -7,21 +7,20 @@ class MessageDAO:
       conn, cursor = db_connect()
       
       auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
-                      WHERE user_id=%s AND user_id=%s'''
+                       WHERE user_id=%s'''
       
-      cursor.execute(auth_query, (message['sender_user_id'], message['recipient_user_id']))
+      cursor.execute(auth_query, (message['sender_user_id'],))
 
       auth_user = cursor.fetchone()
 
       session_expiration_date = auth_user[1]
-
+      
       expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
 
       current_date = datetime.now()
 
       current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
 
-      
       if auth_user and current_date_str <= expiration_date_str:
         messages_query = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body) 
                             VALUES(%s, %s, %s, %s, %s)'''
@@ -39,7 +38,7 @@ class MessageDAO:
 
         cursor.execute(messages_query2, (message['subject'], message['body']))
 
-        new_message2 = cursor.lastrowid
+        new_message2 = cursor.fetchone()
         
         return new_message2
 
@@ -136,13 +135,13 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
     
-      messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, date FROM messages 
+      messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, message_date FROM messages 
                           WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(messages_query, (message_id,))
       message_id2 = cursor.fetchone()
     
-      recipients_query = '''UPDATE recipient SET is_read=1 
+      recipients_query = '''UPDATE recipients SET is_read=1 
                             WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(recipients_query, (message_id,))

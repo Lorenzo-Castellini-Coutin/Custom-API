@@ -50,7 +50,7 @@ class UserDAO:
         token = generate_token()
         is_auth = 1
        
-        expiration_date = datetime.now() + timedelta(hours = 1)
+        expiration_date = datetime.now() + timedelta(minutes = 5)
         
         auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date)
                         VALUES(%s, %s, %s)'''
@@ -84,7 +84,7 @@ class UserDAO:
 
       session_expiration_date = auth_user[1]
 
-      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      current_date = datetime.now()
 
       if auth_user and current_date <= session_expiration_date:
         pw, salt = hashing_with_salt(user_data['password'])
@@ -131,14 +131,9 @@ class UserDAO:
 
       session_expiration_date = auth_user[1]
 
-      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
-
       current_date = datetime.now()
 
-      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
-
-
-      if auth_user and current_date_str <= expiration_date_str:
+      if auth_user and current_date <= session_expiration_date:
         users_query = '''SELECT user_id, first_name, last_name, date_of_birth, gender, phone_number, email_address, is_premium FROM users 
                          WHERE is_deleted=0 AND user_id=%s'''
     
@@ -147,7 +142,7 @@ class UserDAO:
         conn.close()
         return user_info2
 
-      elif auth_user and current_date_str > session_expiration_date:
+      elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s'''
         
@@ -180,8 +175,7 @@ class UserDAO:
 
       session_expiration_date = auth_user[1]
 
-      current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+      current_date = datetime.now()
       
       if auth_user and current_date <= session_expiration_date:
         users_query = '''UPDATE users SET is_deleted=1 WHERE user_id=%s'''
