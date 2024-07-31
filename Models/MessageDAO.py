@@ -7,7 +7,7 @@ class MessageDAO:
       conn, cursor = db_connect()
       
       auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
-                       WHERE user_id=%s'''
+                      WHERE user_id=%s'''
       
       cursor.execute(auth_query, (message['sender_user_id'],))
 
