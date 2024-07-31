@@ -14,14 +14,10 @@ class MessageDAO:
       auth_user = cursor.fetchone()
 
       session_expiration_date = auth_user[1]
-      
-      expiration_date_str = session_expiration_date.strftime('%Y-%m-%d %H:%M:%S')
 
       current_date = datetime.now()
 
-      current_date_str = current_date.strftime('%Y-%m-%d %H:%M:%S')
-
-      if auth_user and current_date_str <= expiration_date_str:
+      if auth_user and current_date <= session_expiration_date:
         messages_query = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body) 
                             VALUES(%s, %s, %s, %s, %s)'''
     
@@ -42,7 +38,7 @@ class MessageDAO:
         
         return new_message2
 
-      elif auth_user and current_date_str > session_expiration_date:
+      elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s AND user_id=%s'''
         
