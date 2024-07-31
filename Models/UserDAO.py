@@ -50,7 +50,7 @@ class UserDAO:
         token = generate_token()
         is_auth = 1
        
-        expiration_date = datetime.now() + timedelta(minutes = 5)
+        expiration_date = datetime.now() + timedelta(minutes = 5) #Change this to a week after t
         
         auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date, user_id)
                         VALUES(%s, %s, %s)'''
@@ -58,9 +58,7 @@ class UserDAO:
         cursor.execute(auth_query, (token, is_auth, expiration_date, user_id))
         conn.commit()
         
-        auth_user2 = cursor.lastrowid
-        
-        return auth_user2
+        return user_id
       
     except Exception as e:
       print(f'An error occured in AuthenticateUser: {e}')

@@ -41,7 +41,7 @@ class Users:
          user_auth1 = UserDAO().AuthenticateUser2(user_data)
          
          if user_auth1:
-            return jsonify('User authenticated.'), 200
+            return jsonify(f'User authenticated. The user id is: {user_auth1}'), 200
          
          else:
             return jsonify('Either the user never existed/was already deleted, or something went wrong in authentication.'), 500
