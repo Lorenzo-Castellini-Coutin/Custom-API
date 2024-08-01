@@ -48,7 +48,7 @@ class Users:
 
 
    
-   def updateUser1(self, user_data):
+   def updateUser1(self, user_data, user_id):
       checks = check_new_user_data(user_data)
 
       if checks == 1:
@@ -61,7 +61,7 @@ class Users:
          return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
       
       else:
-         adduser1 = UserDAO().updateUser2(user_data)
+         adduser1 = UserDAO().updateUser2(user_data, user_id)
 
          if adduser1:
             return jsonify('User account was updated with the given information.'), 200

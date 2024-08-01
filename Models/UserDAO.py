@@ -56,6 +56,7 @@ class UserDAO:
                         VALUES(%s, %s, %s, %s) 
                         
                         ON DUPLICATE KEY UPDATE 
+
                         authentication_token = VALUES(authentication_token),
                         is_authenticated = VALUES(is_authenticated),
                         session_expiration_date = VALUES(session_expiration_date),
@@ -75,14 +76,14 @@ class UserDAO:
         conn.close()
 
     
-  def updateUser2(self, user_data):
+  def updateUser2(self, user_data, user_id):
     try:
       conn, cursor = db_connect()
     
       auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s'''
       
-      cursor.execute(auth_query, user_data['user_id'])
+      cursor.execute(auth_query, (user_id,))
 
       auth_user = cursor.fetchone()
 
@@ -96,7 +97,7 @@ class UserDAO:
         users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
                          WHERE is_deleted=0 AND user_id=%s'''
     
-        cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium'], user_data['user_id']))
+        cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium'], user_id,))
         conn.commit()
         conn.close()
         return True
@@ -105,7 +106,7 @@ class UserDAO:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
                         WHERE user_id=%s'''
         
-        cursor.execute(auth_query,user_data['user_id'])
+        cursor.execute(auth_query, (user_id,))
         conn.commit()
         return False
 
@@ -170,7 +171,7 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
       
-      auth_query = '''SELECT is_authenticated, session_expiration date FROM authentication_data
+      auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s'''
       
       cursor.execute(auth_query, (user_id,))

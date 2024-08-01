@@ -31,7 +31,7 @@ def existing_users(user_id):
     elif request.method == 'DELETE':
         return Users().deleteUser1(user_id)
     elif request.method == 'PUT':
-        return Users().updateUser1(request.get_json())
+        return Users().updateUser1(request.get_json(), user_id)
     else:
         return jsonify('Method not allowed'), 405
     
