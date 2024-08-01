@@ -53,7 +53,13 @@ class UserDAO:
         expiration_date = datetime.now() + timedelta(minutes = 5) #Change this to a week after t
         
         auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date, user_id)
-                        VALUES(%s, %s, %s)'''
+                        VALUES(%s, %s, %s, %s) 
+                        
+                        ON DUPLICATE KEY UPDATE 
+                        authentication_token = VALUES(authentication_token),
+                        is_authenticated = VALUES(is_authenticated),
+                        session_expiration_date = VALUES(session_expiration_date),
+                        user_id = VALUES(user_id);'''
         
         cursor.execute(auth_query, (token, is_auth, expiration_date, user_id))
         conn.commit()
