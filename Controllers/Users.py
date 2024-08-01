@@ -61,13 +61,17 @@ class Users:
          return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
       
       else:
-         adduser1 = UserDAO().updateUser2(user_data, user_id)
+         if user_id.isdigit():
+            adduser1 = UserDAO().updateUser2(user_data, user_id)
 
-         if adduser1:
-            return jsonify('User account was updated with the given information.'), 200
+            if adduser1:
+               return jsonify('User account was updated with the given information.'), 200
          
+            else:
+               return jsonify('Either the user never existed/was already deleted, or something went wrong in the updating.'), 500
+            
          else:
-            return jsonify('Either the user never existed/was already deleted, or something went wrong in the updating.'), 500
+            return jsonify('The user id is of invalid type or not supported.'), 400
       
       
    def getUserById1(self, user_id):
