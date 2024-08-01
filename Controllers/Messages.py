@@ -8,8 +8,7 @@ class Messages:
       new_message1 = MessageDAO().sendNewMessage2(message)
 
       if new_message1:
-        new_message_id = new_message1[0]
-        return jsonify(f'Message sent successfully. The message id is: {new_message_id}'), 200
+        return jsonify(f'Message sent successfully. The message id is: {new_message1}'), 200
       
       else:
         return jsonify('Something went wrong with sending the message.'), 500

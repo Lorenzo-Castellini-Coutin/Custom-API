@@ -23,26 +23,28 @@ class MessageDAO:
     
         cursor.execute(messages_query, (message['sender_user_id'], message['recipient_user_id'], message['reply_id'], message['subject'], message['body']))
 
-        recipients_query = '''INSERT INTO recipients (sender_user_id, recipient_user_id) 
-                              VALUES(%s, %s)'''
-    
-        cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id']))
-        conn.commit()
-        
         messages_query2 = '''SELECT message_id FROM messages 
                              WHERE subject=%s AND body=%s'''
 
         cursor.execute(messages_query2, (message['subject'], message['body']))
 
         new_message2 = cursor.fetchone()
+
+        new_message_id = new_message2[0]
+
+        recipients_query = '''INSERT INTO recipients (sender_user_id, recipient_user_id, message_id) 
+                              VALUES(%s, %s, %s)'''
+    
+        cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id'], new_message_id,))
+        conn.commit()
         
-        return new_message2
+        return new_message_id
 
       elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
-                        WHERE user_id=%s AND user_id=%s'''
+                        WHERE user_id=%s'''
         
-        cursor.execute(auth_query, (message['sender_user_id'], message['recipient_user_id']))
+        cursor.execute(auth_query, (message['sender_user_id'],))
         conn.commit()
 
     except Exception as e:
