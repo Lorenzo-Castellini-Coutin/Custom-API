@@ -18,12 +18,12 @@ class MessageDAO:
       current_date = datetime.now()
 
       if auth_user and current_date <= session_expiration_date:
-        messages_query = '''INSERT INTO messages (sender_user_id, recipient_user_id, reply_id, subject, body) 
-                            VALUES(%s, %s, %s, %s, %s)'''
+        messages_query = '''INSERT INTO messages (sender_user_id, recipient_user_id, subject, body) 
+                            VALUES(%s, %s, %s, %s)'''
     
-        cursor.execute(messages_query, (message['sender_user_id'], message['recipient_user_id'], message['reply_id'], message['subject'], message['body']))
+        cursor.execute(messages_query, (message['sender_user_id'], message['recipient_user_id'], message['subject'], message['body']))
 
-        messages_query2 = '''SELECT message_id FROM messages 
+        messages_query2 = '''SELECT message_id, reply_id FROM messages 
                              WHERE subject=%s AND body=%s'''
 
         cursor.execute(messages_query2, (message['subject'], message['body']))
@@ -32,10 +32,12 @@ class MessageDAO:
 
         new_message_id = new_message2[0]
 
-        recipients_query = '''INSERT INTO recipients (sender_user_id, recipient_user_id, message_id) 
+        new_message_reply_id = new_message2[1]
+
+        recipients_query = '''INSERT INTO recipients (sender_user_id, recipient_user_id, message_id, reply_id) 
                               VALUES(%s, %s, %s)'''
     
-        cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id'], new_message_id,))
+        cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id'], new_message_id, new_message_reply_id,))
         conn.commit()
         
         return new_message_id
