@@ -9,7 +9,7 @@ class MessageDAO:
       auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
                       WHERE user_id=%s'''
       
-      cursor.execute(auth_query, (message['sender_user_id']))
+      cursor.execute(auth_query, (message['sender_user_id'],))
 
       auth_user = cursor.fetchone()
 
@@ -54,14 +54,14 @@ class MessageDAO:
         conn.close()
 
     
-  def updateMessage2(self, new_message):
+  def updateMessage2(self, new_message, message_id):
     try:
       conn, cursor = db_connect()
       
       auth_query = '''SELECT is_authenticated, session_expiration_date FROM authentication_data
-                      WHERE user_id=%s AND user_id=%s'''
+                      WHERE user_id=%s'''
       
-      cursor.execute(auth_query, (new_message['sender_user_id']))
+      cursor.execute(auth_query, (new_message['sender_user_id'],))
 
       auth_user = cursor.fetchone()
 
@@ -73,20 +73,20 @@ class MessageDAO:
         messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
                             WHERE is_deleted=0 AND message_id=%s'''
     
-        cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], new_message['message_id']))
+        cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], message_id,))
 
         recipients_query = '''UPDATE recipients SET recipient_user_id=%s 
                               WHERE is_deleted=0 AND message_id=%s'''
     
-        cursor.execute(recipients_query, (new_message['recipient_user_id'], new_message['message_id']))
+        cursor.execute(recipients_query, (new_message['recipient_user_id'], message_id,))
         conn.commit()
         return True
 
       elif auth_user and current_date > session_expiration_date:
         auth_query = '''UPDATE authentication_data SET is_authenticated=0
-                        WHERE user_id=%s AND user_id=%s'''
+                        WHERE user_id=%s'''
         
-        cursor.execute(auth_query, (new_message['sender_user_id']))
+        cursor.execute(auth_query, (new_message['sender_user_id'],))
         conn.commit()
 
     except Exception as e:
@@ -107,7 +107,7 @@ class MessageDAO:
     
       cursor.execute(messages_query, (del_message,))
     
-      recipients_query = '''UPDATE recipient SET is_deleted=1 
+      recipients_query = '''UPDATE recipients SET is_deleted=1 
                             WHERE message_id=%s'''
     
       cursor.execute(recipients_query, (del_message,))

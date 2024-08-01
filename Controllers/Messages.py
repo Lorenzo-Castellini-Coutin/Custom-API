@@ -18,9 +18,9 @@ class Messages:
       return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
     
 
-  def updateMessage1(self, new_message):
-    if new_message['message_id'].isdigit() and check_data_messages(new_message):
-      message_update = MessageDAO().updateMessage2(new_message)
+  def updateMessage1(self, new_message, message_id):
+    if message_id.isdigit() and check_data_messages(new_message):
+      message_update = MessageDAO().updateMessage2(new_message, message_id)
 
       if message_update:
         return jsonify('Message was successfully updated.'), 200

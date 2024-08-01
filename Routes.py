@@ -52,8 +52,7 @@ def existing_messages(message_id):
     elif request.method == 'DELETE':
         return Messages().deleteMessage1(message_id)
     elif request.method == 'PUT':
-        new_message = request.get_json()
-        return Messages().updateMessage1(new_message)
+        return Messages().updateMessage1(request.get_json(), message_id)
     else:
         return jsonify('Method not allowed.'), 405
 
