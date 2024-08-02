@@ -36,23 +36,24 @@ def existing_users(user_id):
         return jsonify('Method not allowed.'), 405
     
 
-@app.route('/app/messages', methods = ['POST'])
+@app.route('/app/messages', methods = ['POST', 'PUT'])
 def new_message():
     if request.method == 'POST':
         new_message = request.get_json()
         return Messages().sendNewMessage(new_message)
+    elif request.method == 'PUT':
+        modify_message = request.get_json()
+        return Messages().updateMessage(new_message)
     else:
         return jsonify('Method not allowed.'), 405
     
 
-@app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE', 'PUT'])
+@app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
 def existing_messages(message_id):
     if request.method == 'GET':
         return Messages().getMessageById(message_id)
     elif request.method == 'DELETE':
         return Messages().deleteMessage(message_id)
-    elif request.method == 'PUT':
-        return Messages().updateMessage(request.get_json(), message_id)
     else:
         return jsonify('Method not allowed.'), 405
 
@@ -63,8 +64,7 @@ def existing_messages(message_id):
 
 
 
-#Notes:
-#Error codes 400 mean bad request from the client-side.
+
 
 
 #Author: Lorenzo Castellini Coutin

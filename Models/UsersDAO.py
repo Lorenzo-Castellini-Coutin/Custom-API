@@ -1,5 +1,5 @@
 from Functions import db_connect
-from Hashing import hashing_with_salt, verification_hashing
+from Hashing_and_Tokens import hashing_with_salt, verification_hashing
 from User_Data_Validation import generate_token
 from datetime import datetime, timedelta
 
@@ -29,7 +29,7 @@ class UserDAO:
       conn.close()
 
     
-  def updateUser2(self, user_data, user_id):
+  def updateUser(self, user_data, user_id):
     try:
       conn, cursor = db_connect()
     
@@ -76,7 +76,7 @@ class UserDAO:
         conn.close()
 
   
-  def getUserById2(self, user_id):
+  def getUserById(self, user_id):
     try:  
       conn, cursor = db_connect()
       
@@ -120,7 +120,7 @@ class UserDAO:
         conn.close()
   
   
-  def deleteUser2(self, user_id):
+  def deleteUser(self, user_id):
     try:
       conn, cursor = db_connect()
       

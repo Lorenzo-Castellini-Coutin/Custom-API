@@ -20,7 +20,7 @@ class Users:
          new_user_id = UserDAO().addNewUser(user_data)
 
          if new_user_id:
-            return jsonify(f'User account created. The user id is: {new_user_id}'), 200
+            return jsonify(f'User account created. The user id is: {new_user_id}.'), 200
          
          else:
             return jsonify('Something went wrong while creating the new account.'), 500
@@ -42,13 +42,12 @@ class Users:
          user_login = AuthenticationDAO().authenticateUser(user_data)
          
          if user_login:
-            return jsonify(f'User authenticated. The user id is: {user_login}'), 200
+            return jsonify(f'User authenticated. The user id is: {user_login}.'), 200
          
          else:
-            return jsonify('Either the user never existed/was already deleted, or something went wrong in authentication.'), 500
+            return jsonify('The user might have been deleted/never existed.'), 404
 
 
-   
    def updateUser(self, user_data, user_id):
       error_code = check_new_user_data(user_data)
 
@@ -63,13 +62,19 @@ class Users:
       
       else:
          if user_id.isdigit():
-            adduser1 = UserDAO().updateUser2(user_data, user_id)
+            user_auth = AuthenticationDAO().verifyAuthTokens(user_id)
 
-            if adduser1:
-               return jsonify('User account was updated with the given information.'), 200
+            if user_auth:
+               update_user = UserDAO().updateUser(user_data, user_id)
+
+               if update_user:
+                  return jsonify(f'User with id: {update_user}, was updated.'), 200
+               
+               else:
+                  return jsonify('The user might have been deleted/never existed.'), 404
          
             else:
-               return jsonify('Either the user never existed/was already deleted, or something went wrong in the updating.'), 500
+               return jsonify('The user is not authenticated.'), 401
             
          else:
             return jsonify('The user id is of invalid type or not supported.'), 400
@@ -77,13 +82,19 @@ class Users:
       
    def getUserById(self, user_id):
       if user_id.isdigit():
-         user_info1 = UserDAO().getUserById2(user_id)
+         user_auth = AuthenticationDAO().verifyAuthTokens(user_id)
+
+         if user_auth:
+            user_info = UserDAO().getUserById(user_id)
+
+            if user_info:
+               return jsonify(user_info), 200
          
-         if user_info1:
-            return jsonify(user_info1), 200
-         
+            else:
+               return jsonify('The user might have been deleted/never existed.'), 404
+
          else:
-            return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
+            return jsonify('User is not authenticated.'), 401
       
       else:
          return jsonify('The user id is of invalid type/not supported.'), 400
@@ -91,14 +102,20 @@ class Users:
 
    def deleteUser(self, user_id):
       if user_id.isdigit():
-         delete_user = UserDAO().deleteUser2(user_id)
+         user_auth = AuthenticationDAO().verifyAuthTokens(user_id)
          
-         if delete_user:
-            return jsonify('User deleted succesfully.'), 200
+         if user_auth:
+            delete_user = UserDAO().deleteUser(user_id)
+
+            if delete_user:
+               return jsonify(f'User with id: {delete_user}, was deleted.'), 200
+            
+            else:
+               return jsonify('The user might not exist/already deleted, or something went wrong.'), 404
          
          else:
-            return jsonify('The user might not exist/already deleted, or something went wrong with deleting the user.'), 500
-      
+            return jsonify('User is not authenticated.'), 401
+         
       else:
          return jsonify('The user id is of invalid type or not supported.'), 400
       
@@ -108,8 +125,3 @@ class Users:
 
 
 
-
-#Notes:
-#The numbers 1, 2, 3 are used for error handling in order to return a particular error message given the type of error.
-#The numbers 1 and 2 used in variables mean controller functions and model functions, respectively.
-#Error codes 400 mean bad request from client-side, 200 means that the execution was successful, and 500 is a server-side or db-side error.

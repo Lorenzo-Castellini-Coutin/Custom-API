@@ -43,5 +43,24 @@ class AuthenticationDAO:
                 conn.close()
 
 
+    def verifyAuthTokens(self, user_id):
+        try:    
+            conn, cursor = db_connect ()
+
+            auth_query = '''SELECT authentication_token FROM authentication_data
+                            WHERE NOW() <= session_expiration_date AND user_id=%s'''
+
+            user_tokens = cursor.fetchone(auth_query, (user_id,))
+
+            if user_tokens:
+                return True
+        
+            else:
+                return False
+            
+        except Exception as e:
+            print(f'An error ocurred on verifyAuthTokens: {e}')
+            return False
+
 
 
