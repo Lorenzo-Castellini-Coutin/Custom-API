@@ -1,4 +1,5 @@
-from Models.UsersDAO import UserDAO, AuthenticationDAO
+from Models.UsersDAO import UserDAO
+from Models.AuthenticationDAO import AuthenticationDAO
 from flask import Flask, jsonify
 from User_Data_Validation import *
 
@@ -38,7 +39,7 @@ class Users:
          return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
 
       else:
-         user_login = AuthenticationDAO().AuthenticateUser(user_data)
+         user_login = AuthenticationDAO().authenticateUser(user_data)
          
          if user_login:
             return jsonify(f'User authenticated. The user id is: {user_login}'), 200

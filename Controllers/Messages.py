@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from User_Data_Validation import *
 
 class Messages:
-  def sendNewMessage1(self, message):
+  def sendNewMessage(self, message):
     if check_data_messages(message):
       new_message1 = MessageDAO().sendNewMessage2(message)
 
@@ -17,7 +17,7 @@ class Messages:
       return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
     
 
-  def updateMessage1(self, new_message, message_id):
+  def updateMessage(self, new_message, message_id):
     if message_id.isdigit() and check_data_messages(new_message):
       message_update = MessageDAO().updateMessage2(new_message, message_id)
 
@@ -31,7 +31,7 @@ class Messages:
       return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
 
   
-  def deleteMessage1(self, message_id):
+  def deleteMessage(self, message_id):
     if message_id.isdigit():  
       delete_message = MessageDAO().deleteMessage2(message_id)
       
@@ -45,7 +45,7 @@ class Messages:
       return jsonify('The message id is of invalid type or not supported.'), 400
     
 
-  def getMessageById1(self, message_id):
+  def getMessageById(self, message_id):
     if message_id.isdigit():
       message_id1 = MessageDAO().getMessageById2(message_id)
       

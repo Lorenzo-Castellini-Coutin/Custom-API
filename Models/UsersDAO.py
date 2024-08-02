@@ -28,54 +28,6 @@ class UserDAO:
      if conn:
       conn.close()
 
-
-  def AuthenticateUser2(self, user_data):
-    try:  
-      conn, cursor = db_connect()
-
-      users_query = '''SELECT user_id, password, salt FROM users WHERE is_deleted=0 AND first_name=%s AND last_name=%s AND email_address=%s'''
-
-      cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['email']))
-      
-      user_db_info = cursor.fetchone()
-      
-      user_id = user_db_info[0]
-
-      salt = user_db_info[2]
-
-      entered_pw = verification_hashing(user_data['password'], salt)
-
-      original_pw = user_db_info[1]
-      
-      if original_pw == entered_pw:
-        token = generate_token()
-        is_auth = 1
-       
-        expiration_date = datetime.now() + timedelta(minutes = 5) #Change this to a week after testing it
-        
-        auth_query = '''INSERT INTO authentication_data (authentication_token, is_authenticated, session_expiration_date, user_id)
-                        VALUES(%s, %s, %s, %s) 
-                        
-                        ON DUPLICATE KEY UPDATE 
-
-                        authentication_token = VALUES(authentication_token),
-                        is_authenticated = VALUES(is_authenticated),
-                        session_expiration_date = VALUES(session_expiration_date),
-                        user_id = VALUES(user_id);'''
-        
-        cursor.execute(auth_query, (token, is_auth, expiration_date, user_id))
-        conn.commit()
-        
-        return user_id
-      
-    except Exception as e:
-      print(f'An error occured in AuthenticateUser: {e}')
-      return False
-    
-    finally:
-      if conn:  
-        conn.close()
-
     
   def updateUser2(self, user_data, user_id):
     try:

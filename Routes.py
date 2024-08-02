@@ -19,7 +19,7 @@ def new_user():
 def authenticate():
     if request.method == 'POST':
         user_data = request.get_json()
-        return Users().AuthenticateUser1(user_data)
+        return Users().userLogin(user_data)
     else:
         return jsonify('Method not allowed.'), 405
     
@@ -27,20 +27,20 @@ def authenticate():
 @app.route('/app/users/<user_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_users(user_id):
     if request.method == 'GET':
-        return Users().getUserById1(user_id)
+        return Users().getUserById(user_id)
     elif request.method == 'DELETE':
-        return Users().deleteUser1(user_id)
+        return Users().deleteUser(user_id)
     elif request.method == 'PUT':
-        return Users().updateUser1(request.get_json(), user_id)
+        return Users().updateUser(request.get_json(), user_id)
     else:
-        return jsonify('Method not allowed'), 405
+        return jsonify('Method not allowed.'), 405
     
 
 @app.route('/app/messages', methods = ['POST'])
 def new_message():
     if request.method == 'POST':
         new_message = request.get_json()
-        return Messages().sendNewMessage1(new_message)
+        return Messages().sendNewMessage(new_message)
     else:
         return jsonify('Method not allowed.'), 405
     
@@ -48,11 +48,11 @@ def new_message():
 @app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE', 'PUT'])
 def existing_messages(message_id):
     if request.method == 'GET':
-        return Messages().getMessageById1(message_id)
+        return Messages().getMessageById(message_id)
     elif request.method == 'DELETE':
-        return Messages().deleteMessage1(message_id)
+        return Messages().deleteMessage(message_id)
     elif request.method == 'PUT':
-        return Messages().updateMessage1(request.get_json(), message_id)
+        return Messages().updateMessage(request.get_json(), message_id)
     else:
         return jsonify('Method not allowed.'), 405
 
