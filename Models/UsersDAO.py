@@ -1,6 +1,6 @@
 from Functions import db_connect
 from Hashing import hashing_with_salt, verification_hashing
-from Authentication_Validation import generate_token
+from User_Data_Validation import generate_token
 from datetime import datetime, timedelta
 
 class UserDAO:
@@ -16,8 +16,9 @@ class UserDAO:
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium']))
       conn.commit()
       
-      add_user2 = cursor.lastrowid
-      return add_user2
+      new_user_id = cursor.lastrowid
+      
+      return new_user_id
       
     except Exception as e:
       print(f'An error ocurred in addNewUser: {e}')

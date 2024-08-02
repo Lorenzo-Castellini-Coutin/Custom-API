@@ -1,6 +1,6 @@
 from Models.MessagesDAO import MessageDAO
 from flask import Flask, jsonify, request
-from Authentication_Validation import *
+from User_Data_Validation import *
 
 class Messages:
   def sendNewMessage1(self, message):

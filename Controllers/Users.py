@@ -1,19 +1,19 @@
-from Models.UsersDAO import UserDAO
-from flask import Flask, jsonify, request
-from Authentication_Validation import *
+from Models.UsersDAO import UserDAO, AuthenticationDAO
+from flask import Flask, jsonify
+from User_Data_Validation import *
 
 class Users:
    def addNewUser(self, user_data):
-      checks = check_new_user_data(user_data)
+      error_code = check_new_user_data(user_data)
       
-      if checks == 1:
+      if error_code == 1:
             return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif checks == 2:
-            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      elif error_code == 2:
+            return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif checks == 3:
-            return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
+      elif error_code == 3:
+            return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
       
       else:
          new_user_id = UserDAO().addNewUser(user_data)
@@ -25,40 +25,40 @@ class Users:
             return jsonify('Something went wrong while creating the new account.'), 500
          
       
-   def AuthenticateUser1(self, user_data):
-      checks = check_auth_data(user_data)
+   def userLogin(self, user_data):
+      error_code = check_login_data(user_data)
 
-      if checks == 1:
+      if error_code == 1:
             return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif checks == 2:
-            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      elif error_code == 2:
+            return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif checks == 3:
-         return jsonify('Verify that the user-supplied credentials are correct/accurate.'), 400
+      elif error_code == 3:
+         return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
 
       else:
-         user_auth1 = UserDAO().AuthenticateUser2(user_data)
+         user_login = AuthenticationDAO().AuthenticateUser(user_data)
          
-         if user_auth1:
-            return jsonify(f'User authenticated. The user id is: {user_auth1}'), 200
+         if user_login:
+            return jsonify(f'User authenticated. The user id is: {user_login}'), 200
          
          else:
             return jsonify('Either the user never existed/was already deleted, or something went wrong in authentication.'), 500
 
 
    
-   def updateUser1(self, user_data, user_id):
-      checks = check_new_user_data(user_data)
+   def updateUser(self, user_data, user_id):
+      error_code = check_new_user_data(user_data)
 
-      if checks == 1:
+      if error_code == 1:
          return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif checks == 2:
-         return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      elif error_code == 2:
+         return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif checks == 3:
-         return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
+      elif error_code == 3:
+         return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
       
       else:
          if user_id.isdigit():
@@ -74,7 +74,7 @@ class Users:
             return jsonify('The user id is of invalid type or not supported.'), 400
       
       
-   def getUserById1(self, user_id):
+   def getUserById(self, user_id):
       if user_id.isdigit():
          user_info1 = UserDAO().getUserById2(user_id)
          
@@ -85,14 +85,14 @@ class Users:
             return jsonify('The user might not exist/already deleted, or something went wrong with retrieving the user.'), 500
       
       else:
-         return jsonify('The user id is of invalid type or not supported.'), 400
+         return jsonify('The user id is of invalid type/not supported.'), 400
       
 
-   def deleteUser1(self, user_id):
+   def deleteUser(self, user_id):
       if user_id.isdigit():
-         delete_user1 = UserDAO().deleteUser2(user_id)
+         delete_user = UserDAO().deleteUser2(user_id)
          
-         if delete_user1:
+         if delete_user:
             return jsonify('User deleted succesfully.'), 200
          
          else:

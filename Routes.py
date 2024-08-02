@@ -36,7 +36,7 @@ def existing_users(user_id):
         return jsonify('Method not allowed'), 405
     
 
-@app.route('/app/new_messages', methods = ['POST'])
+@app.route('/app/messages', methods = ['POST'])
 def new_message():
     if request.method == 'POST':
         new_message = request.get_json()
