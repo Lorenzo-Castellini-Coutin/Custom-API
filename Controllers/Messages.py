@@ -1,4 +1,4 @@
-from Models.MessageDAO import MessageDAO
+from Models.MessagesDAO import MessageDAO
 from flask import Flask, jsonify, request
 from Authentication_Validation import *
 

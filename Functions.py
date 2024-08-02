@@ -12,7 +12,7 @@ def db_connect():
         password = os.getenv('DB_password'),
         database = os.getenv('DB_name')
     )
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary = True)
     return connection, cursor
 
 

@@ -10,7 +10,7 @@ app = Flask(__name__)
 def new_user():
     if request.method == 'POST':
         user_data = request.get_json()
-        return Users().addNewUser1(user_data)
+        return Users().addNewUser(user_data)
     else:
         return jsonify('Method not allowed.'), 405
     
@@ -60,9 +60,11 @@ def existing_messages(message_id):
 
 
 
+
+
+
 #Notes:
 #Error codes 400 mean bad request from the client-side.
-
 
 
 #Author: Lorenzo Castellini Coutin

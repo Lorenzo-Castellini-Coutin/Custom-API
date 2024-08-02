@@ -1,9 +1,9 @@
-from Models.UserDAO import UserDAO
+from Models.UsersDAO import UserDAO
 from flask import Flask, jsonify, request
 from Authentication_Validation import *
 
 class Users:
-   def addNewUser1(self, user_data):
+   def addNewUser(self, user_data):
       checks = check_new_user_data(user_data)
       
       if checks == 1:
@@ -16,10 +16,10 @@ class Users:
             return jsonify('Verify that the user-supplied data is correct/accurate.'), 400
       
       else:
-         adduser1 = UserDAO().addNewUser2(user_data)
+         new_user_id = UserDAO().addNewUser(user_data)
 
-         if adduser1:
-            return jsonify(f'User account created. The user id is: {adduser1}'), 200
+         if new_user_id:
+            return jsonify(f'User account created. The user id is: {new_user_id}'), 200
          
          else:
             return jsonify('Something went wrong while creating the new account.'), 500
