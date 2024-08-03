@@ -1,6 +1,6 @@
 from Models.UsersDAO import UserDAO
 from Models.AuthenticationDAO import AuthenticationDAO
-from flask import Flask, jsonify
+from flask import jsonify
 from User_Data_Validation import *
 
 class Users:
