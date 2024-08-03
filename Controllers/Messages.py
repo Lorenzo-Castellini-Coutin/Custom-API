@@ -35,11 +35,12 @@ class Messages:
 
     if message_id.isdigit():
 
-      if error_code == 1:
-        return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      match error_code:
+        case 1:
+          return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif error_code == 2:
-        return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
+        case 2:
+          return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
 
   
   def deleteMessage(self, message_id):
