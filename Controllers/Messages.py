@@ -1,39 +1,50 @@
 from Models.MessagesDAO import MessageDAO
-from flask import Flask, jsonify, request
+from Models.AuthenticationDAO import AuthenticationDAO
+from flask import jsonify
 from User_Data_Validation import *
 
 class Messages:
   def sendNewMessage(self, message):
-    if check_data_messages(message):
-      new_message1 = MessageDAO().sendNewMessage2(message)
-
-      if new_message1:
-        return jsonify(f'Message sent successfully. The message id is: {new_message1}'), 200
+    error_code = check_data_messages(message)
       
-      else:
-        return jsonify('Something went wrong with sending the message.'), 500
+    match error_code:
+      case 1:    
+        return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
 
-    else:
-      return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
-    
+      case 2:
+        return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
+
+      case 100: 
+        sender_user_auth = AuthenticationDAO().authenticateUser(message['sender_user_id'])
+
+        if sender_user_auth:
+          new_message = MessageDAO().sendNewMessage(message)
+
+          if new_message:
+            return jsonify(f'The message was sent. The message id is: {new_message}'), 200
+        
+          else:
+            return jsonify('Something went wrong.'), 500
+        
+        else:
+          return jsonify('User is not authenticated.'), 401
+      
 
   def updateMessage(self, new_message, message_id):
-    if message_id.isdigit() and check_data_messages(new_message):
-      message_update = MessageDAO().updateMessage2(new_message, message_id)
+    error_code = check_data_messages(new_message)
 
-      if message_update:
-        return jsonify('Message was successfully updated.'), 200
-        
-      else:
-        return jsonify('The message might not exist/already been deleted, or something went wrong with updating the message.'), 500
-        
-    else:
-      return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
+    if message_id.isdigit():
+
+      if error_code == 1:
+        return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      
+      elif error_code == 2:
+        return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
 
   
   def deleteMessage(self, message_id):
     if message_id.isdigit():  
-      delete_message = MessageDAO().deleteMessage2(message_id)
+      delete_message = MessageDAO().deleteMessage(message_id)
       
       if delete_message:  
         return jsonify('Message deleted successfully.'), 200
@@ -47,7 +58,7 @@ class Messages:
 
   def getMessageById(self, message_id):
     if message_id.isdigit():
-      message_id1 = MessageDAO().getMessageById2(message_id)
+      message_id1 = MessageDAO().getMessageById(message_id)
       
       if message_id1:
         return jsonify(message_id1), 200

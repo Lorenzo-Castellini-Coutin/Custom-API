@@ -2,7 +2,7 @@ from Functions import db_connect
 from datetime import datetime
 
 class MessageDAO:
-  def sendNewMessage2(self, message):
+  def sendNewMessage(self, message):
     try:
       conn, cursor = db_connect()
       
@@ -57,7 +57,7 @@ class MessageDAO:
         conn.close()
 
     
-  def updateMessage2(self, new_message, message_id):
+  def updateMessage(self, new_message, message_id):
     try:
       conn, cursor = db_connect()
       
@@ -101,7 +101,7 @@ class MessageDAO:
         conn.close()
 
 
-  def deleteMessage2(self, del_message):  
+  def deleteMessage(self, del_message):  
     try:
       conn, cursor = db_connect()
 
@@ -126,7 +126,7 @@ class MessageDAO:
         conn.close()
 
 
-  def getMessageById2(self, message_id):
+  def getMessageById(self, message_id):
     try:
       conn, cursor = db_connect()
     
