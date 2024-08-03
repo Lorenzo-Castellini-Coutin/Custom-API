@@ -24,7 +24,7 @@ class Users:
                return jsonify(f'User account created. The user id is: {new_user_id}.'), 200
          
             else:
-               return jsonify('Something went wrong while creating the new account.'), 500
+               return jsonify('Something went wrong.'), 500
          
       
    def userLogin(self, user_data):

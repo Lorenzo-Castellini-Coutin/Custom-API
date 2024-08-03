@@ -51,9 +51,9 @@ def messages():
 @app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
 def messages(message_id):
     if request.method == 'GET':
-        return Messages().getMessageById(message_id)
+        return Messages().getMessageById(request.get_json(), message_id)
     elif request.method == 'DELETE':
-        return Messages().deleteMessage(message_id)
+        return Messages().deleteMessage(request.get_json(), message_id)
     else:
         return jsonify('Method not allowed.'), 405
 
