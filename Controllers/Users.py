@@ -7,77 +7,80 @@ class Users:
    def addNewUser(self, user_data):
       error_code = check_new_user_data(user_data)
       
-      if error_code == 1:
+      match error_code:
+         case 1:   
             return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif error_code == 2:
+         case 2:
             return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif error_code == 3:
+         case 3:
             return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
       
-      else:
-         new_user_id = UserDAO().addNewUser(user_data)
+         case 100:
+            new_user_id = UserDAO().addNewUser(user_data)
 
-         if new_user_id:
-            return jsonify(f'User account created. The user id is: {new_user_id}.'), 200
+            if new_user_id:
+               return jsonify(f'User account created. The user id is: {new_user_id}.'), 200
          
-         else:
-            return jsonify('Something went wrong while creating the new account.'), 500
+            else:
+               return jsonify('Something went wrong while creating the new account.'), 500
          
       
    def userLogin(self, user_data):
       error_code = check_login_data(user_data)
 
-      if error_code == 1:
+      match error_code:
+         case 1:
             return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif error_code == 2:
+         case 2:
             return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif error_code == 3:
-         return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
+         case 3:
+            return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
 
-      else:
-         user_login = AuthenticationDAO().authenticateUser(user_data)
+         case 100:
+            user_login = AuthenticationDAO().authenticateUser(user_data)
          
-         if user_login:
-            return jsonify(f'User authenticated. The user id is: {user_login}.'), 200
+            if user_login:
+               return jsonify(f'User authenticated. The user id is: {user_login}.'), 200
          
-         else:
-            return jsonify('The user might have been deleted/never existed.'), 404
+            else:
+               return jsonify('The user might have been deleted/never existed.'), 404
 
 
    def updateUser(self, user_data, user_id):
       error_code = check_new_user_data(user_data)
 
-      if error_code == 1:
-         return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      match error_code:
+         case 1:
+            return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
       
-      elif error_code == 2:
-         return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
+         case 2:
+            return jsonify('One or more of the user-supplied are of invalid/unsupported type.'), 400
       
-      elif error_code == 3:
-         return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
+         case 3:
+            return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
       
-      else:
-         if user_id.isdigit():
-            user_auth = AuthenticationDAO().verifyAuthTokens(user_id)
+         case 100:
+            if user_id.isdigit():
+               user_auth = AuthenticationDAO().verifyAuthTokens(user_id)
 
-            if user_auth:
-               update_user = UserDAO().updateUser(user_data, user_id)
+               if user_auth:
+                  update_user = UserDAO().updateUser(user_data, user_id)
 
-               if update_user:
-                  return jsonify(f'User with id: {update_user}, was updated.'), 200
+                  if update_user:
+                     return jsonify(f'User with id: {update_user}, was updated.'), 200
                
-               else:
-                  return jsonify('The user might have been deleted/never existed.'), 404
+                  else:
+                     return jsonify('The user might have been deleted/never existed.'), 404
          
-            else:
-               return jsonify('The user is not authenticated.'), 401
+               else:
+                  return jsonify('The user is not authenticated.'), 401
             
-         else:
-            return jsonify('The user id is of invalid type or not supported.'), 400
+            else:
+               return jsonify('The user id is of invalid type or not supported.'), 400
       
       
    def getUserById(self, user_id):

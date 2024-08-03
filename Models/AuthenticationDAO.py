@@ -45,7 +45,7 @@ class AuthenticationDAO:
 
     def verifyAuthTokens(self, user_id):
         try:    
-            conn, cursor = db_connect ()
+            conn, cursor = db_connect()
 
             auth_query = '''SELECT authentication_token FROM authentication_data
                             WHERE NOW() <= session_expiration_date AND user_id=%s'''
