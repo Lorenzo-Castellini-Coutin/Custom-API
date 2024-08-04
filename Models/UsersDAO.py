@@ -1,6 +1,6 @@
 from Functions import db_connect
 from Hashing_and_Tokens import hashing_with_salt, verification_hashing
-from User_Data_Validation import generate_token
+
 
 class UserDAO:
   def addNewUser(self, user_data):
@@ -62,7 +62,6 @@ class UserDAO:
       user_info = cursor.fetchone()
       conn.close()
       return user_info
-
       
     except Exception as e:
       print(f'An error ocurred in getUserById: {e}')
@@ -85,7 +84,9 @@ class UserDAO:
 
       cursor.execute(auth_query, (user_id,))
       conn.commit()
-      return True
+      
+      delete_user = cursor.lastrowid
+      return delete_user
 
     except Exception as e:
       print(f'An error ocurred in deleteUser: {e}')
