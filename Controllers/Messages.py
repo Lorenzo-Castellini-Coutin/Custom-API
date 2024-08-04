@@ -1,7 +1,7 @@
 from Models.MessagesDAO import MessageDAO
 from Models.AuthenticationDAO import AuthenticationDAO
 from flask import jsonify
-from User_Data_Validation import *
+from Data_Validation import *
 
 class Messages:
   def sendNewMessage(self, message):
@@ -109,9 +109,20 @@ class Messages:
       return jsonify('The message id is of invalid/incorrect type.'), 400
     
 
-  def getMessageById(self, get_message, message_id):
+  def getMessageById(self, message_id):
     if message_id.isdigit():
-      auth_user = AuthenticationDAO().verifyAuthTokens()
+      get_message = MessageDAO().getMessageById(message_id)
+
+      if get_message:
+        return jsonify(get_message), 200
+        
+      else:
+        return jsonify('Message is not available.'), 400
+        
+    else:
+      return jsonify('The message id is of invalid/incorrect type.'), 400
+      
+      
       
 
 

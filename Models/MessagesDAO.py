@@ -101,6 +101,7 @@ class MessageDAO:
       sent = cursor.fetchall
 
       conn.commit()
+      return sent
 
     except Exception as e:
       print(f'An error ocurred in getSent: {e}')
@@ -144,14 +145,15 @@ class MessageDAO:
                           WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(messages_query, (message_id,))
-      message_id2 = cursor.fetchone()
+      
+      get_message = cursor.fetchone()
     
       recipients_query = '''UPDATE recipients SET is_read=1 
                             WHERE is_deleted=0 AND message_id=%s'''
 
       cursor.execute(recipients_query, (message_id,))
       conn.commit()
-      return message_id2
+      return get_message
     
     except Exception as e:
       print(f'An error ocurred in getMessageByID: {e}')

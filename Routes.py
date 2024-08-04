@@ -46,7 +46,7 @@ def messages():
         return jsonify('Method not allowed.'), 405
     
 
-@app.route('/app/inbox/<recipient_user_id', methods = ['GET'])
+@app.route('/app/inbox/<recipient_user_id>', methods = ['GET'])
 def messages(recipient_user_id):
     if request.method == 'GET':
         return Messages().getInbox(recipient_user_id)
@@ -65,8 +65,7 @@ def messages(sender_user_id):
 @app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
 def messages(message_id):
     if request.method == 'GET':
-        get_message = request.get_json()
-        return Messages().getMessageById(get_message, message_id)
+        return Messages().getMessageById(message_id)
     elif request.method == 'DELETE':
         delete_message = request.get_json()
         return Messages().deleteMessage(delete_message, message_id)
