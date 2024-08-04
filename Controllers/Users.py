@@ -5,7 +5,7 @@ from User_Data_Validation import *
 
 class Users:
    def addNewUser(self, user_data):
-      error_code = check_new_user_data(user_data)
+      error_code = validate_user(user_data)
       
       match error_code:
          case 1:   
@@ -28,7 +28,7 @@ class Users:
          
       
    def userLogin(self, user_data):
-      error_code = check_login_data(user_data)
+      error_code = validate_login(user_data)
 
       match error_code:
          case 1:
@@ -51,7 +51,7 @@ class Users:
 
 
    def updateUser(self, user_data, user_id):
-      error_code = check_new_user_data(user_data)
+      error_code = validate_user(user_data)
 
       match error_code:
          case 1:
