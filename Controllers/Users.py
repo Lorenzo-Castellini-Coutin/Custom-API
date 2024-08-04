@@ -27,8 +27,8 @@ class Users:
                return jsonify('Something went wrong.'), 500
          
       
-   def userLogin(self, user_data):
-      error_code = validate_login(user_data)
+   def userLogin(self, user_signin):
+      error_code = validate_login(user_signin)
 
       match error_code:
          case 1:
@@ -40,9 +40,9 @@ class Users:
          case 3:
             return jsonify('One or more of the user-supplied credentials are incorrect/inaccurate.'), 400
 
-         case 100:
-            user_login = AuthenticationDAO().authenticateUser(user_data)
-         
+         case _:
+            user_login = AuthenticationDAO().authenticateUser(user_signin)
+           
             if user_login:
                return jsonify(f'User authenticated. The user id is: {user_login}.'), 200
          

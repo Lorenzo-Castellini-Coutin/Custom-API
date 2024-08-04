@@ -1,6 +1,5 @@
 from Functions import db_connect
 
-
 class MessageDAO:
   def sendNewMessage(self, message):
     try:
@@ -16,17 +15,15 @@ class MessageDAO:
 
       cursor.execute(messages_info_query, (message['subject'], message['body']))
 
-      new_message = cursor.lastrowid
-
-      new_message_id = new_message['message_id']
+      new_message = cursor.fetchone()
 
       recipients_query = '''INSERT INTO recipients (sender_user_id, recipient_user_id, message_id, reply_id) 
                             VALUES(%s, %s, %s, %s)'''
     
-      cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id'], new_message_id, message['reply_id']))
+      cursor.execute(recipients_query, (message['sender_user_id'], message['recipient_user_id'], new_message['message_id'], message['reply_id']))
       conn.commit()
         
-      return new_message
+      return new_message['message_id']
 
     except Exception as e:
       print(f'An error ocurred in sendNewMessage: {e}')
@@ -42,12 +39,12 @@ class MessageDAO:
       conn, cursor = db_connect()
       
       messages_query = '''UPDATE messages SET recipient_user_id=%s, subject=%s, body=%s 
-                          WHERE is_deleted=0 AND message_id=%s'''
+                          WHERE is_deleted=0 AND message_id=%s AND sender_user_id=%s'''
     
-      cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], message_id,))
+      cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], message_id, new_message['sender_user_id']))
 
       recipients_query = '''UPDATE recipients SET recipient_user_id=%s 
-                            WHERE is_deleted=0 AND message_id=%s'''
+                            WHERE message_id=%s'''
     
       cursor.execute(recipients_query, (new_message['recipient_user_id'], message_id,))
       conn.commit()
@@ -66,19 +63,27 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
 
-      messages_query = '''SELECT subject, body, sender_user_id, reply_id, message_date, message_date_updated
-                          WHERE recipient_user_id=%s'''
-      
-      cursor.execute(messages_query, (recipient_user_id,))
-      
-      inbox = cursor.fetchall
-
-      recipients_query = '''UPDATE recipients SET is_read=%s 
+      recipients_query = '''UPDATE recipients SET is_read=1 
                             WHERE is_deleted=0 AND recipient_user_id=%s'''
       
       cursor.execute(recipients_query, (recipient_user_id,))
       conn.commit()
-      return inbox
+
+      available_messages = cursor.rowcount
+      
+      if available_messages:
+      
+        messages_query = '''SELECT subject, body, sender_user_id, reply_id, message_date, last_update_date FROM messages
+                            WHERE recipient_user_id=%s'''
+      
+        cursor.execute(messages_query, (recipient_user_id,))
+      
+        inbox = cursor.fetchall()
+    
+        return inbox
+      
+      else:
+        return False
     
     except Exception as e:
       print(f'An error occured in getInbox: {e}')
@@ -93,12 +98,12 @@ class MessageDAO:
     try:
       conn, cursor = db_connect()
 
-      messages_query = '''SELECT subject, body, recipient_user_id, message_date, message_date_updated
+      messages_query = '''SELECT subject, body, recipient_user_id, message_date, last_update_date FROM messages
                           WHERE is_deleted=0 AND sender_user_id=%s'''
       
       cursor.execute(messages_query, (sender_user_id,))
 
-      sent = cursor.fetchall
+      sent = cursor.fetchall()
 
       conn.commit()
       return sent
@@ -112,21 +117,29 @@ class MessageDAO:
         conn.close()
 
 
-  def deleteMessage(self, del_message):  
+  def deleteMessage(self, user_id, message_id):  
     try:
       conn, cursor = db_connect()
 
       messages_query = '''UPDATE messages SET is_deleted=1 
-                          WHERE message_id=%s'''
+                          WHERE message_id=%s AND sender_user_id=%s'''
     
-      cursor.execute(messages_query, (del_message,))
-    
-      recipients_query = '''UPDATE recipients SET is_deleted=1 
-                            WHERE message_id=%s'''
-    
-      cursor.execute(recipients_query, (del_message,))
+      cursor.execute(messages_query, (message_id, user_id['user_id']))
       conn.commit()
-      return True
+
+      delete_sender_message = cursor.lastrowid
+
+      if not delete_sender_message:
+        recipients_query = '''UPDATE recipients SET is_deleted=1 AND is_read=1
+                              WHERE message_id=%s AND recipient_user_id=%s'''
+        
+        cursor.execute(recipients_query, (message_id, user_id['user_id']))
+        conn.commit()
+
+        return True
+      
+      else:
+        return delete_sender_message
     
     except Exception as e:
       print(f'An error ocurred in deleteMessage: {e}')
@@ -137,23 +150,37 @@ class MessageDAO:
         conn.close()
 
 
-  def getMessageById(self, message_id):
+  def getMessageById(self, user_id, message_id):
     try:
       conn, cursor = db_connect()
     
       messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, message_date FROM messages 
-                          WHERE is_deleted=0 AND message_id=%s'''
+                          WHERE is_deleted=0 AND message_id=%s AND sender_user_id=%s'''
 
-      cursor.execute(messages_query, (message_id,))
+      cursor.execute(messages_query, (message_id, user_id['user_id']))
       
-      get_message = cursor.fetchone()
+      get_sender_message = cursor.fetchone()
     
-      recipients_query = '''UPDATE recipients SET is_read=1 
-                            WHERE is_deleted=0 AND message_id=%s'''
+      if not get_sender_message:
+      
+        messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, message_date FROM messages 
+                            WHERE is_deleted=0 AND message_id=%s AND recipient_user_id=%s'''
+        
+        cursor.execute(messages_query, (message_id, user_id['user_id']))
 
-      cursor.execute(recipients_query, (message_id,))
-      conn.commit()
-      return get_message
+        get_recipient_message = cursor.fetchone()
+
+        recipients_query = '''UPDATE recipients SET is_read=1
+                              WHERE message_id=%s AND recipient_user_id=%s'''
+        
+        cursor.execute(recipients_query,(message_id, user_id['user_id']))
+
+        conn.commit()
+
+        return get_recipient_message
+      
+      else:
+        return get_sender_message
     
     except Exception as e:
       print(f'An error ocurred in getMessageByID: {e}')

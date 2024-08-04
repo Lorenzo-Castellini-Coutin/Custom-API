@@ -15,7 +15,8 @@ class Messages:
         return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
 
       case 100: 
-        sender_user_auth = AuthenticationDAO().authenticateUser(message['sender_user_id'])
+        sender_user_id = message['sender_user_id']
+        sender_user_auth = AuthenticationDAO().verifyAuthTokens(sender_user_id)
 
         if sender_user_auth:
           new_message = MessageDAO().sendNewMessage(message)
@@ -69,7 +70,7 @@ class Messages:
         inbox = MessageDAO().getInbox(recipient_user_id)
 
         if inbox:
-          return jsonify(inbox), 200
+          return jsonify(inbox,), 200
         
         else:
           return jsonify('No messages available for this user.'), 400
@@ -95,34 +96,43 @@ class Messages:
         return jsonify('User is not authenticated.'), 401
 
 
-  def deleteMessage(self, message_id):
-    if message_id.isdigit():  
-      delete_message = MessageDAO().deleteMessage(message_id)
+  def deleteMessage(self, user_id, message_id):
+    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'])
+
+    if auth_user:
+      if message_id.isdigit():  
+        delete_message = MessageDAO().deleteMessage(user_id, message_id)
+       
+        if delete_message:  
+          return jsonify(f'The message with id: {message_id}, has been deleted.'), 200
       
-      if delete_message:  
-        return jsonify(f'The message with id: {delete_message}, has been deleted.'), 200
-      
-      else:
-        return jsonify('The message might have been deleted/never existed.'), 400
+        else:
+          return jsonify('The message might have been deleted/never existed.'), 400
     
+      else:
+        return jsonify('The message id is of invalid/incorrect type.'), 400
+      
     else:
-      return jsonify('The message id is of invalid/incorrect type.'), 400
+      return jsonify('User is not authenticated.'), 401
     
 
-  def getMessageById(self, message_id):
-    if message_id.isdigit():
-      get_message = MessageDAO().getMessageById(message_id)
-
-      if get_message:
-        return jsonify(get_message), 200
+  def getMessageById(self, user_id, message_id):
+    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'])  
+      
+    if auth_user:
+      if message_id.isdigit():
+        get_message = MessageDAO().getMessageById(user_id, message_id)
+        
+        if get_message:
+          return jsonify(get_message), 200
+        
+        else:
+          return jsonify('Message is not available.'), 400
         
       else:
-        return jsonify('Message is not available.'), 400
-        
+        return jsonify('The message id is of invalid/incorrect type.'), 400
+      
     else:
-      return jsonify('The message id is of invalid/incorrect type.'), 400
-      
-      
-      
+      return jsonify('User is not authenticated.'), 401
 
 

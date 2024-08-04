@@ -38,7 +38,7 @@ def users(user_id):
     
 
 @app.route('/app/messages', methods = ['POST', 'PUT'])
-def messages():
+def new_messages():
     if request.method == 'POST':
         new_message = request.get_json()
         return Messages().sendNewMessage(new_message)
@@ -47,7 +47,7 @@ def messages():
     
 
 @app.route('/app/inbox/<recipient_user_id>', methods = ['GET'])
-def messages(recipient_user_id):
+def inbox(recipient_user_id):
     if request.method == 'GET':
         return Messages().getInbox(recipient_user_id)
     else:
@@ -55,7 +55,7 @@ def messages(recipient_user_id):
 
 
 @app.route('/app/sent/<sender_user_id>', methods = ['GET'])
-def messages(sender_user_id):
+def sent(sender_user_id):
     if request.method == 'GET':
         return Messages().getSent(sender_user_id)
     else:
@@ -65,10 +65,11 @@ def messages(sender_user_id):
 @app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
 def messages(message_id):
     if request.method == 'GET':
-        return Messages().getMessageById(message_id)
+        user_id = request.get_json()
+        return Messages().getMessageById(user_id, message_id)
     elif request.method == 'DELETE':
-        delete_message = request.get_json()
-        return Messages().deleteMessage(delete_message, message_id)
+        user_id = request.get_json()
+        return Messages().deleteMessage(user_id, message_id)
     elif request.method == 'PUT':
         modify_message = request.get_json()
         return Messages().updateMessage(modify_message)

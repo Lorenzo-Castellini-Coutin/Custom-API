@@ -32,9 +32,11 @@ class UserDAO:
     try:
       conn, cursor = db_connect()
 
+      pw, salt = hashing_with_salt(user_data['password'])
+
       users_query = '''UPDATE users SET first_name=%s, last_name=%s, date_of_birth=%s, gender=%s, phone_number=%s, email_address=%s, password=%s, salt=%s, is_premium=%s 
                        WHERE is_deleted=0 AND user_id=%s'''
-    
+
       cursor.execute(users_query, (user_data['firstname'], user_data['lastname'], user_data['birthdate'], user_data['gender'], user_data['phone'], user_data['email'], pw, salt, user_data['premium'], user_id,))
       conn.commit()
       conn.close()
