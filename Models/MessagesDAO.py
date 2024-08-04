@@ -1,5 +1,5 @@
 from Functions import db_connect
-from datetime import datetime
+
 
 class MessageDAO:
   def sendNewMessage(self, message):
@@ -55,6 +55,55 @@ class MessageDAO:
 
     except Exception as e:
       print(f'An error ocurred in updateMessage: {e}')
+      return False
+    
+    finally:
+      if conn:
+        conn.close()
+
+  
+  def getInbox(self, recipient_user_id):
+    try:
+      conn, cursor = db_connect()
+
+      messages_query = '''SELECT subject, body, sender_user_id, reply_id, message_date, message_date_updated
+                          WHERE recipient_user_id=%s'''
+      
+      cursor.execute(messages_query, (recipient_user_id,))
+      
+      inbox = cursor.fetchall
+
+      recipients_query = '''UPDATE recipients SET is_read=%s 
+                            WHERE is_deleted=0 AND recipient_user_id=%s'''
+      
+      cursor.execute(recipients_query, (recipient_user_id,))
+      conn.commit()
+      return inbox
+    
+    except Exception as e:
+      print(f'An error occured in getInbox: {e}')
+      return False
+    
+    finally:
+      if conn: 
+        conn.close()
+    
+
+  def getSent(self, sender_user_id):
+    try:
+      conn, cursor = db_connect()
+
+      messages_query = '''SELECT subject, body, recipient_user_id, message_date, message_date_updated
+                          WHERE is_deleted=0 AND sender_user_id=%s'''
+      
+      cursor.execute(messages_query, (sender_user_id,))
+
+      sent = cursor.fetchall
+
+      conn.commit()
+
+    except Exception as e:
+      print(f'An error ocurred in getSent: {e}')
       return False
     
     finally:

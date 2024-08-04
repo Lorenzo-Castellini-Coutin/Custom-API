@@ -21,7 +21,7 @@ class AuthenticationDAO:
 
                 session_expiration_date = expiration_time_utc()
 
-                auth_query = '''INSERT INTO authentication_data (authentication_token, session_expiration_date, user_id)
+                auth_query = '''INSERT INTO authentication (authentication_token, session_expiration_date, user_id)
                                 VALUES(%s, %s, %s) 
                         
                                 ON DUPLICATE KEY UPDATE 
@@ -47,7 +47,7 @@ class AuthenticationDAO:
         try:    
             conn, cursor = db_connect()
 
-            auth_query = '''SELECT authentication_token FROM authentication_data
+            auth_query = '''SELECT authentication_token FROM authentication
                             WHERE NOW() <= session_expiration_date AND user_id=%s'''
 
             user_tokens = cursor.fetchone(auth_query, (user_id,))

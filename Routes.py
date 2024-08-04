@@ -18,8 +18,8 @@ def register():
 @app.route('/app/login', methods = ['POST'])
 def login():
     if request.method == 'POST':
-        user_data = request.get_json()
-        return Users().userLogin(user_data)
+        user_sigin = request.get_json()
+        return Users().userLogin(user_sigin)
     else:
         return jsonify('Method not allowed.'), 405
     
@@ -31,7 +31,8 @@ def users(user_id):
     elif request.method == 'DELETE':
         return Users().deleteUser(user_id)
     elif request.method == 'PUT':
-        return Users().updateUser(request.get_json(), user_id)
+        update_user = request.get_json()
+        return Users().updateUser(update_user, user_id)
     else:
         return jsonify('Method not allowed.'), 405
     
@@ -41,19 +42,37 @@ def messages():
     if request.method == 'POST':
         new_message = request.get_json()
         return Messages().sendNewMessage(new_message)
-    elif request.method == 'PUT':
-        modify_message = request.get_json()
-        return Messages().updateMessage(modify_message)
     else:
         return jsonify('Method not allowed.'), 405
     
 
+@app.route('/app/inbox/<recipient_user_id', methods = ['GET'])
+def messages(recipient_user_id):
+    if request.method == 'GET':
+        return Messages().getInbox(recipient_user_id)
+    else:
+        return jsonify('Method not allowed.'), 405
+
+
+@app.route('/app/sent/<sender_user_id>', methods = ['GET'])
+def messages(sender_user_id):
+    if request.method == 'GET':
+        return Messages().getSent(sender_user_id)
+    else:
+        return jsonify('Method not allowed.'), 405
+
+
 @app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
 def messages(message_id):
     if request.method == 'GET':
-        return Messages().getMessageById(request.get_json(), message_id)
+        get_message = request.get_json()
+        return Messages().getMessageById(get_message, message_id)
     elif request.method == 'DELETE':
-        return Messages().deleteMessage(request.get_json(), message_id)
+        delete_message = request.get_json()
+        return Messages().deleteMessage(delete_message, message_id)
+    elif request.method == 'PUT':
+        modify_message = request.get_json()
+        return Messages().updateMessage(modify_message)
     else:
         return jsonify('Method not allowed.'), 405
 
