@@ -1,5 +1,5 @@
 from Functions import db_connect
-from Hashing_and_Tokens import hashing_with_salt, verification_hashing
+from Hashing_and_Tokens import hashing_with_salt
 
 
 class UserDAO:
