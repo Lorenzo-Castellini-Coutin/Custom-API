@@ -44,10 +44,10 @@ class Messages:
           return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
         
         case 100:
-          sender_user_auth = AuthenticationDAO().authenticateUser(new_message['sender_user_id'])
+          sender_user_auth = AuthenticationDAO().verifyAuthTokens(new_message['sender_user_id'])
 
           if sender_user_auth:
-            update_message = MessageDAO().updateMessage(new_message)
+            update_message = MessageDAO().updateMessage(new_message, message_id)
 
             if update_message:
               return jsonify(f'The message with id: {update_message}, has been updated.'), 200
@@ -122,7 +122,7 @@ class Messages:
     if auth_user:
       if message_id.isdigit():
         get_message = MessageDAO().getMessageById(user_id, message_id)
-        
+      
         if get_message:
           return jsonify(get_message), 200
         

@@ -62,7 +62,7 @@ def sent(sender_user_id):
         return jsonify('Method not allowed.'), 405
 
 
-@app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE'])
+@app.route('/app/messages/<message_id>', methods = ['GET', 'DELETE', 'PUT'])
 def messages(message_id):
     if request.method == 'GET':
         user_id = request.get_json()
@@ -72,7 +72,7 @@ def messages(message_id):
         return Messages().deleteMessage(user_id, message_id)
     elif request.method == 'PUT':
         modify_message = request.get_json()
-        return Messages().updateMessage(modify_message)
+        return Messages().updateMessage(modify_message, message_id)
     else:
         return jsonify('Method not allowed.'), 405
 

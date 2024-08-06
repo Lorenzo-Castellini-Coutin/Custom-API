@@ -41,8 +41,7 @@ class UserDAO:
       conn.commit()
       conn.close()
       
-      update_user_id = cursor.lastrowid
-      return update_user_id
+      return user_id
 
     except Exception as e:
       print(f'An error ocurred in updateUser: {e}')
@@ -82,13 +81,9 @@ class UserDAO:
 
       cursor.execute(users_query, (user_id,))
 
-      auth_query = '''UPDATE authentication_data SET is_authenticated=0 WHERE user_id=%s'''
-
-      cursor.execute(auth_query, (user_id,))
       conn.commit()
       
-      delete_user = cursor.lastrowid
-      return delete_user
+      return user_id
 
     except Exception as e:
       print(f'An error ocurred in deleteUser: {e}')
