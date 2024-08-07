@@ -30,9 +30,16 @@ class AuthenticationDAO:
                 
                 cursor.execute(auth_query, (user_auth_token, session_expiration_date, user_info['user_id']))
 
+                auth_info = '''SELECT authentication_token FROM authentication WHERE
+                                user_id=%s'''
+
+                cursor.execute(auth_info, (user_info['user_id']))
+
+                token = cursor.fetchone()
+
                 conn.commit()
 
-                return user_info['user_id']
+                return token 
             
             else:
                 return False
@@ -46,14 +53,14 @@ class AuthenticationDAO:
                 conn.close()
 
 
-    def verifyAuthTokens(self, user_id):
+    def verifyAuthTokens(self, user_id, token):
         try:    
             conn, cursor = db_connect()
 
             auth_query = '''SELECT authentication_token FROM authentication
-                            WHERE NOW() < session_expiration_date AND user_id=%s'''
+                            WHERE NOW() < session_expiration_date AND user_id=%s AND authentication_token=%s'''
 
-            cursor.execute(auth_query, (user_id,))
+            cursor.execute(auth_query, (user_id, token))
 
             user_tokens = cursor.fetchone()
 

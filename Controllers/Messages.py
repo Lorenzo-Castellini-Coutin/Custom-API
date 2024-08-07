@@ -4,22 +4,18 @@ from flask import jsonify
 from Data_Validation import *
 
 class Messages:
-  def sendNewMessage(self, message):
-    error_code = validate_new_messages(message)
-      
-    match error_code:
-      case 1:    
-        return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+  def sendNewMessage(self, new_message, args):
+    error_code, message = validate_new_messages(new_message)
+    
+    if error_code != 100:
+      return jsonify(message), 400
+   
+    else:
+      sender_user_id = new_message['sender_user_id']
+      sender_user_auth = AuthenticationDAO().verifyAuthTokens(sender_user_id, args.get('token'))
 
-      case 2:
-        return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
-
-      case 100: 
-        sender_user_id = message['sender_user_id']
-        sender_user_auth = AuthenticationDAO().verifyAuthTokens(sender_user_id)
-
-        if sender_user_auth:
-          new_message = MessageDAO().sendNewMessage(message)
+      if sender_user_auth:
+          new_message = MessageDAO().sendNewMessage(new_message)
 
           if new_message:
             return jsonify(f'The message was sent. The message id is: {new_message}'), 200
@@ -27,44 +23,40 @@ class Messages:
           else:
             return jsonify('Something went wrong.'), 500
         
-        else:
-          return jsonify('User is not authenticated.'), 401
+      else:
+        return jsonify('User is not authenticated.'), 401
       
 
-  def updateMessage(self, new_message, message_id):
-    error_code = validate_new_messages(new_message)
+  def updateMessage(self, new_message, message_id, args):
+    error_code, message = validate_new_messages(new_message)
 
     if message_id.isdigit():
 
-      match error_code:
-        case 1:
-          return jsonify('One or more of the user-supplied data execeeded the maximum length supported.'), 400
+      if error_code != 100:
+        return jsonify(message), 400
       
-        case 2:
-          return jsonify('One or more of the user-supplied data values are of invalid type or not supported.'), 400
-        
-        case 100:
-          sender_user_auth = AuthenticationDAO().verifyAuthTokens(new_message['sender_user_id'])
+      else:
+        sender_user_auth = AuthenticationDAO().verifyAuthTokens(new_message['sender_user_id'], args.get('token'))
 
-          if sender_user_auth:
-            update_message = MessageDAO().updateMessage(new_message, message_id)
+        if sender_user_auth:
+          update_message = MessageDAO().updateMessage(new_message, message_id)
 
-            if update_message:
-              return jsonify(f'The message with id: {update_message}, has been updated.'), 200
-            
-            else:
-              return jsonify('Something went wrong.'), 500
+          if update_message:
+            return jsonify(f'The message with id: {update_message}, has been updated.'), 200
             
           else:
-            return jsonify('User is not authenticated.'), 401
+            return jsonify('Something went wrong.'), 500
+            
+        else:
+          return jsonify('User is not authenticated.'), 401
           
     else:
       return jsonify('The message id is of invalid/incorrect type.'), 400
   
 
-  def getInbox(self, recipient_user_id):
+  def getInbox(self, recipient_user_id, args):
     if recipient_user_id.isdigit():
-      auth_user = AuthenticationDAO().verifyAuthTokens(recipient_user_id)
+      auth_user = AuthenticationDAO().verifyAuthTokens(recipient_user_id, args.get('token'))
 
       if auth_user:
         inbox = MessageDAO().getInbox(recipient_user_id)
@@ -79,9 +71,9 @@ class Messages:
         return jsonify('User is not authenticated.'), 401
       
   
-  def getSent(self, sender_user_id):
+  def getSent(self, sender_user_id, args):
     if sender_user_id.isdigit():
-      auth_user = AuthenticationDAO().verifyAuthTokens(sender_user_id)
+      auth_user = AuthenticationDAO().verifyAuthTokens(sender_user_id, args.get('token'))
 
       if auth_user:
         sent = MessageDAO().getSent(sender_user_id)
@@ -96,8 +88,8 @@ class Messages:
         return jsonify('User is not authenticated.'), 401
 
 
-  def deleteMessage(self, user_id, message_id):
-    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'])
+  def deleteMessage(self, user_id, message_id, args):
+    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'], args.get('token'))
 
     if auth_user:
       if message_id.isdigit():  
@@ -116,8 +108,8 @@ class Messages:
       return jsonify('User is not authenticated.'), 401
     
 
-  def getMessageById(self, user_id, message_id):
-    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'])  
+  def getMessageById(self, user_id, message_id, args):
+    auth_user = AuthenticationDAO().verifyAuthTokens(user_id['user_id'], args.get('token'))  
       
     if auth_user:
       if message_id.isdigit():

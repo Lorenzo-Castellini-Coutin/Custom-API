@@ -155,7 +155,6 @@ class MessageDAO:
       
       get_sender_message = cursor.fetchone()
       
-    
       if not get_sender_message:
       
         messages_query = '''SELECT sender_user_id, recipient_user_id, subject, body, message_date FROM messages 
