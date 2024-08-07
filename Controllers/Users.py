@@ -30,7 +30,7 @@ class Users:
          user_login = AuthenticationDAO().authenticateUser(user_signin)
            
          if user_login:
-            return jsonify(f'User authenticated. The user id is: {user_login}.'), 200
+            return jsonify(f'User authenticated. The user token is: {user_login}.'), 200
          
          else:
             return jsonify('The user might have been deleted/never existed.'), 404
