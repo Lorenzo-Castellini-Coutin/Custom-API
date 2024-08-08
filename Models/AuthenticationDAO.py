@@ -31,15 +31,15 @@ class AuthenticationDAO:
                 cursor.execute(auth_query, (user_auth_token, session_expiration_date, user_info['user_id']))
 
                 auth_info = '''SELECT authentication_token FROM authentication WHERE
-                                user_id=%s'''
+                               user_id=%s'''
 
-                cursor.execute(auth_info, (user_info['user_id']))
+                cursor.execute(auth_info, (user_info['user_id'],))
 
                 token = cursor.fetchone()
 
                 conn.commit()
 
-                return token 
+                return token['authentication_token']
             
             else:
                 return False
@@ -64,7 +64,7 @@ class AuthenticationDAO:
 
             user_tokens = cursor.fetchone()
 
-            return user_tokens['authentication_token']
+            return user_tokens
             
         except Exception as e:
             print(f'An error ocurred on verifyAuthTokens: {e}')

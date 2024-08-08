@@ -43,12 +43,19 @@ class MessageDAO:
     
       cursor.execute(messages_query, (new_message['recipient_user_id'], new_message['subject'], new_message['body'], message_id, new_message['sender_user_id']))
 
-      recipients_query = '''UPDATE recipients SET recipient_user_id=%s 
+      update = cursor.rowcount
+
+      recipients_query = '''UPDATE recipients SET is_read=0, recipient_user_id=%s 
                             WHERE message_id=%s'''
     
       cursor.execute(recipients_query, (new_message['recipient_user_id'], message_id,))
       conn.commit()
-      return message_id
+
+      if not update:
+        return False
+      
+      else:
+        return update
 
     except Exception as e:
       print(f'An error ocurred in updateMessage: {e}')
@@ -69,8 +76,9 @@ class MessageDAO:
       cursor.execute(recipients_query, (recipient_user_id,))
       conn.commit()
       
-      messages_query = '''SELECT message_id, subject, body, sender_user_id, reply_id, message_date, last_update_date FROM messages
-                          WHERE recipient_user_id=%s'''
+      messages_query = '''SELECT m.message_id, m.subject, m.body, m.sender_user_id, m.reply_id, m.message_date, m.last_update_date FROM messages m
+                          JOIN recipients r ON m.message_id = r.message_id
+                          WHERE r.is_deleted=0 AND r.recipient_user_id=%s'''
       
       cursor.execute(messages_query, (recipient_user_id,))
       
