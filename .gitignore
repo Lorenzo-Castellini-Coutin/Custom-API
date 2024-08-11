@@ -3,3 +3,8 @@ __pycache__
 Hashing_and_Tokens.py
 Data_Validation.py
 Dates.py
+.venv
+.vscode
+.deployment
+db_backup.sql
+requirements.txt
